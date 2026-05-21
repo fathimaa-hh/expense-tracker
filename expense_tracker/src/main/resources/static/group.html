@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Group Management - Fare Share</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <div class="card">
+
+      <!-- Logo -->
+      <img src="logojava.png" alt="Fare Share" class="logo" />
+
+      <h2>Manage Groups</h2>
+
+      <p id="userMsg" class="note">
+        Loading your groups...
+      </p>
+
+
+      <!-- ========================= -->
+      <!-- CREATE GROUP -->
+      <!-- ========================= -->
+
+      <h3 style="margin-top:20px;">
+        Create New Group
+      </h3>
+
+      <div class="form-wrap">
+
+        <input
+          type="text"
+          id="groupName"
+          class="input-field"
+          placeholder="Enter group name"
+        >
+
+        <textarea
+          id="groupMembers"
+          class="input-field"
+          rows="4"
+          placeholder="Enter member emails separated by commas"
+        ></textarea>
+
+        <p class="note">
+          Example:
+          friend1@gmail.com, friend2@gmail.com
+        </p>
+
+        <button
+          id="createGroupBtn"
+          class="btn"
+        >
+          ➕ Create Group
+        </button>
+
+      </div>
+
+
+      <!-- ========================= -->
+      <!-- GROUP LIST -->
+      <!-- ========================= -->
+
+      <h3 style="margin-top:30px;">
+        Your Groups
+      </h3>
+
+      <div
+        id="groupList"
+        class="group-list"
+      >
+
+        <div class="subcard">
+          No groups created yet.
+        </div>
+
+      </div>
+
+
+      <!-- ========================= -->
+      <!-- QUICK LINKS -->
+      <!-- ========================= -->
+
+      <div
+        class="quick-links"
+        style="margin-top:30px;"
+      >
+
+        <a href="dashboard.html" class="btn-outline">
+          🏠 Dashboard
+        </a>
+
+        <a href="addbill.html" class="btn-outline">
+          ➕ Add Bill
+        </a>
+
+        <a href="personal.html" class="btn-outline">
+          💰 Personal Tracker
+        </a>
+
+        <a href="reports.html" class="btn-outline">
+          📊 Reports
+        </a>
+
+        <a href="settings.html" class="btn-outline">
+          ⚙️ Settings
+        </a>
+
+      </div>
+
+
+      <!-- Footer -->
+
+      <p class="footer">
+        Create reusable groups for splitting expenses easily.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- Scripts -->
+
+  <script src="auth.js"></script>
+
+  <script src="group.js"></script>
+
+</body>
+</html>

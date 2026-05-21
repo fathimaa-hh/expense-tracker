@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Pending Dues - Fare Share</title>
+
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div class="card">
+
+<img src="logojava.png"
+     class="logo"
+     alt="Fare Share">
+
+<h2>
+Pending Settlements
+</h2>
+
+<p id="userMsg" class="note">
+Loading dues...
+</p>
+
+
+<!-- ======================= -->
+<!-- YOU OWE -->
+<!-- ======================= -->
+
+<h3 style="margin-top:25px;">
+You Owe
+</h3>
+
+<div id="youOweList"
+     class="group-list note">
+</div>
+
+
+<!-- ======================= -->
+<!-- 💳 PAYMENT QR -->
+<!-- ======================= -->
+
+<h3 style="margin-top:25px;">
+Payment QR
+</h3>
+
+<div
+  id="qrContainer"
+  class="group-list note"
+>
+
+Select a payment to generate QR.
+
+</div>
+
+
+<!-- ======================= -->
+<!-- OTHERS OWE YOU -->
+<!-- ======================= -->
+
+<h3 style="margin-top:25px;">
+Others Owe You
+</h3>
+
+<div id="othersOweList"
+     class="group-list note">
+
+No pending collections.
+
+</div>
+
+
+<!-- ======================= -->
+<!-- NAVIGATION -->
+<!-- ======================= -->
+
+<div class="quick-links"
+     style="margin-top:25px;">
+
+<a href="dashboard.html"
+   class="btn-outline">
+🏠 Dashboard
+</a>
+
+<a href="addbill.html"
+   class="btn-outline">
+➕ Add Bill
+</a>
+
+<a href="history.html"
+   class="btn-outline">
+📜 History
+</a>
+
+<a href="reports.html"
+   class="btn-outline">
+📊 Reports
+</a>
+
+</div>
+
+<p class="footer">
+Manage settlements and track dues.
+</p>
+
+</div>
+
+</div>
+
+<script src="auth.js"></script>
+
+<script src="dues.js"></script>
+
+</body>
+</html>

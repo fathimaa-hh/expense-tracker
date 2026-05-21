@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Settings - Fare Share</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="wrap">
+
+<div class="card">
+
+<img src="logojava.png"
+     class="logo"
+     alt="Fare Share">
+
+<h2>
+Settings
+</h2>
+
+<p id="userMsg" class="note">
+Loading settings...
+</p>
+
+
+<!-- ======================= -->
+<!-- 💰 MONTHLY BUDGET -->
+<!-- ======================= -->
+
+<h3 style="margin-top:20px;">
+Monthly Budget
+</h3>
+
+<div class="form-wrap">
+
+<input
+  type="number"
+  id="budgetInput"
+  class="input-field"
+  placeholder="Monthly Budget ₹"
+>
+
+<button
+  id="saveBudgetBtn"
+  class="btn"
+>
+Save Budget
+</button>
+
+</div>
+
+
+<!-- ======================= -->
+<!-- 🚨 ALERT LIMIT -->
+<!-- ======================= -->
+
+<h3 style="margin-top:20px;">
+Budget Alert Limit
+</h3>
+
+<div class="form-wrap">
+
+<input
+  type="number"
+  id="alertLimitInput"
+  class="input-field"
+  placeholder="Alert percentage"
+>
+
+<button
+  id="saveAlertBtn"
+  class="btn"
+>
+Save Alert
+</button>
+
+</div>
+
+
+<!-- ======================= -->
+<!-- 💳 UPI SETTINGS -->
+<!-- ======================= -->
+
+<h3 style="margin-top:20px;">
+UPI / GPay Settings
+</h3>
+
+<div class="form-wrap">
+
+<input
+  type="text"
+  id="upiIdInput"
+  class="input-field"
+  placeholder="Your UPI ID"
+>
+
+<input
+  type="text"
+  id="upiNameInput"
+  class="input-field"
+  placeholder="Your Payment Name"
+>
+
+<button
+  id="saveUpiBtn"
+  class="btn"
+>
+Save UPI
+</button>
+
+</div>
+
+
+<!-- ======================= -->
+<!-- NAVIGATION -->
+<!-- ======================= -->
+
+<div class="quick-links"
+     style="margin-top:25px;">
+
+<a href="dashboard.html"
+   class="btn-outline">
+🏠 Dashboard
+</a>
+
+<a href="dues.html"
+   class="btn-outline">
+💳 Dues
+</a>
+
+<a href="reports.html"
+   class="btn-outline">
+📊 Reports
+</a>
+
+</div>
+
+<p class="footer">
+Manage your Fare Share preferences.
+</p>
+
+</div>
+
+</div>
+
+<script src="auth.js"></script>
+
+<script src="settings.js"></script>
+
+</body>
+</html>

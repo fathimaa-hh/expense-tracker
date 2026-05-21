@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard - Fare Share</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <div class="card">
+
+      <!-- Logo -->
+      <img
+        src="logojava.png"
+        alt="Fare Share"
+        class="logo"
+      />
+
+      <h2>Welcome</h2>
+
+      <p id="welcomeMsg" class="note">
+        Loading...
+      </p>
+
+
+      <!-- ========================= -->
+      <!-- ✅ MONTHLY OVERVIEW -->
+      <!-- ========================= -->
+
+      <h3 style="margin-top:20px;">
+        Monthly Overview
+      </h3>
+
+      <div class="card-grid">
+
+        <!-- Total Spent -->
+        <div class="subcard">
+
+          <h4>Total Spent</h4>
+
+          <p id="totalSpent">
+            ₹ 0
+          </p>
+
+        </div>
+
+
+        <!-- Budget Remaining -->
+        <div class="subcard">
+
+          <h4>Budget Remaining</h4>
+
+          <p id="budgetRemaining">
+            ₹ 0
+          </p>
+
+        </div>
+
+
+        <!-- Pending Settlements -->
+        <div class="subcard">
+
+          <h4>Pending Settlements</h4>
+
+          <p id="pendingSettlements">
+            ₹ 0
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- ========================= -->
+      <!-- ✅ UPCOMING BILLS -->
+      <!-- ========================= -->
+
+      <h3 style="margin-top:25px;">
+        Upcoming Bills
+      </h3>
+
+      <div
+        id="upcomingBills"
+        class="group-list note"
+      >
+
+        No upcoming bills.
+
+      </div>
+
+
+
+      <!-- ========================= -->
+      <!-- ✅ QUICK LINKS -->
+      <!-- ========================= -->
+
+      <h3 style="margin-top:25px;">
+        Quick Links
+      </h3>
+
+      <div class="quick-links">
+
+        <a
+          href="addbill.html"
+          class="btn-outline"
+        >
+          ➕ Add Bill
+        </a>
+
+        <a
+          href="personal.html"
+          class="btn-outline"
+        >
+          💰 Personal Tracker
+        </a>
+
+        <a
+          href="reports.html"
+          class="btn-outline"
+        >
+          📊 Reports
+        </a>
+
+        <a
+          href="group.html"
+          class="btn-outline"
+        >
+          👥 Manage Groups
+        </a>
+
+        <a
+          href="settings.html"
+          class="btn-outline"
+        >
+          ⚙️ Settings
+        </a>
+        <a href="history.html" class="btn-outline">
+          📜 History
+        </a>
+        <a href="dues.html" class="btn-outline">
+          💳 Dues
+        </a>
+
+      </div>
+
+
+
+      <!-- ========================= -->
+      <!-- ✅ BUDGET ALERT -->
+      <!-- ========================= -->
+
+      <div
+        class="alert"
+        id="budgetAlert"
+        style="display:none; margin-top:20px;"
+      >
+
+        <strong>Alert:</strong>
+
+        <span id="alertMessage"></span>
+
+      </div>
+
+
+
+      <!-- ========================= -->
+      <!-- ✅ RECENT ACTIVITY -->
+      <!-- ========================= -->
+
+      <h3 style="margin-top:25px;">
+        Recent Activity
+      </h3>
+
+      <div
+        id="recentActivity"
+        class="group-list note"
+      >
+
+        No recent activity.
+
+      </div>
+
+
+
+      <!-- ========================= -->
+      <!-- ✅ LOGOUT -->
+      <!-- ========================= -->
+
+      <div style="margin-top:20px;">
+
+        <button
+          id="logoutBtn"
+          class="btn"
+        >
+          Logout
+        </button>
+
+      </div>
+
+
+      <p class="footer">
+        This is your personalized dashboard summary.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- Scripts -->
+  <script src="auth.js"></script>
+  <script src="dashboard.js"></script>
+
+</body>
+</html>

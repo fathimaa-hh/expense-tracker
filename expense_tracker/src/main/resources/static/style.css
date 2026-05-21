@@ -1,0 +1,267 @@
+/* style.css - Fare Share theme (authentication module) */
+
+:root{
+  --primary:#a5b4bb;
+  --primary-dark:#8c9da6;
+  --bg:#f6f7f9;
+  --card:#ffffff;
+  --muted:#777;
+  --input-bg:#eeeeee;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: "Poppins", system-ui, Arial, sans-serif;
+  background:var(--bg);
+  color:#222;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  padding:20px;
+}
+
+/* common container */
+.wrap{
+  width:100%;
+  max-width:520px;
+  margin:auto;
+}
+
+/* card */
+.card{
+  background:var(--card);
+  border-radius:28px;
+  padding:36px 32px;
+  box-shadow:0 8px 24px rgba(20,20,20,0.06);
+  text-align:center;
+}
+
+/* logo area */
+.logo{
+  display:block;
+  margin:0 auto 18px;
+  width:110px;
+  height:110px;
+  border-radius:30%;
+  background:linear-gradient(180deg,#fff,#f2f4f6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+}
+
+/* headings */
+h1{margin:6px 0 6px;font-size:28px}
+h2{margin:10px 0 14px;font-size:20px}
+
+/* tagline */
+.tagline{
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:1px;
+  margin-bottom:18px;
+}
+
+/* input style */
+.form-input{
+  width:100%;
+  padding:14px 16px;
+  border-radius:12px;
+  border:none;
+  background:var(--input-bg);
+  margin:10px 0;
+  font-size:15px;
+  text-align:center;
+}
+
+.form-input:focus{outline:2px solid rgba(0,0,0,0.04)}
+
+/* buttons */
+.btn{
+  display:inline-block;
+  background:var(--primary);
+  color:#000;
+  padding:12px 22px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:700;
+  letter-spacing:0.6px;
+  border:none;
+  cursor:pointer;
+  margin-top:12px;
+}
+
+.btn:hover{background:var(--primary-dark)}
+
+/* secondary small link */
+.small-link{
+  display:block;
+  margin-top:8px;
+  color:var(--muted);
+  font-size:13px;
+  text-decoration:none;
+}
+
+/* top CTA buttons in welcome */
+.cta-wrap{display:flex;flex-direction:column;gap:14px;margin-top:18px}
+.cta-wide{padding:14px 20px;border-radius:12px}
+
+/* forgot flow */
+.note{font-size:13px;color:var(--muted);margin-top:8px}
+
+/* success / error */
+.msg{
+  margin-top:10px;
+  padding:8px 12px;
+  border-radius:10px;
+  font-size:14px;
+}
+.msg.success{background:#e6f7ea;color:#0a5b1f}
+.msg.error{background:#ffecec;color:#8b1a1a}
+
+/* tiny footer */
+.footer{font-size:12px;color:#999;margin-top:12px}
+
+/* small screens */
+@media (max-width:420px){
+  .card{padding:22px}
+  .logo{width:96px;height:96px}
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.subcard {
+  background: #f9fafc;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.quick-links a {
+  display: inline-block;
+  margin: 5px;
+  text-decoration: none;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.alert {
+  background: #ffeaea;
+  border: 1px solid #ff9999;
+  color: #c00;
+  padding: 8px;
+  border-radius: 6px;
+  margin-top: 15px;
+  display: none;
+}
+.form-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.input-field {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.group-list .subcard {
+  margin: 10px 0;
+  padding: 10px;
+  background: #fafafa;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-sm {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+textarea.input-field {
+  resize: vertical;
+}
+
+.subcard small {
+  display: block;
+  color: #555;
+}
+
+select.input-field {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  background-color: #fff;
+}
+.alert {
+  display: none;
+  background-color: #ffe5e5;
+  color: #c0392b;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.subcard small {
+  display: block;
+  color: #666;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.data-table th, .data-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.data-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+.form label {
+  display: block;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.list {
+  margin-top: 10px;
+  list-style-type: none;
+  padding: 0;
+}
+
+.list li {
+  background: #f7f7f7;
+  margin: 6px 0;
+  padding: 8px;
+  border-radius: 6px;
+}
