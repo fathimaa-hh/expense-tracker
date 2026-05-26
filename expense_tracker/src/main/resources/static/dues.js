@@ -1,379 +1,212 @@
 // ===============================
 // 🔐 SESSION CHECK
 // ===============================
-const s = localStorage.getItem("fs_session");
+const s =
+    localStorage.getItem('fs_session');
 
 if (!s) {
-    window.location = "login.html";
+
+    window.location = 'login.html';
+
 }
 
 const session = JSON.parse(s);
 
-document.getElementById("userMsg").textContent =
-    `Hello, ${session.name}! Track your settlements here.`;
+
+// ===============================
+// 🌐 API URL
+// ===============================
+const API_URL =
+    'http://localhost:8081/api/settlements';
 
 
 // ===============================
-// 📦 LOAD BILLS
+// ➕ ADD DUE
 // ===============================
-const allBills =
-    JSON.parse(localStorage.getItem("fs_bills")) || [];
+document
+.getElementById('addDueBtn')
 
+.addEventListener('click', async () => {
 
-// ===============================
-// DOM
-// ===============================
-const youOweList =
-    document.getElementById("youOweList");
+    const receiver =
+        document
+        .getElementById('receiver')
+        .value
+        .trim();
 
-const othersOweList =
-    document.getElementById("othersOweList");
+    const amount =
+        parseFloat(
+            document
+            .getElementById('amount')
+            .value
+        );
 
+    if (!receiver || !amount) {
 
-// ===============================
-// FILTER DATA
-// ===============================
-const youOwe = [];
+        alert('Please fill all fields');
 
-const othersOweYou = [];
-
-
-
-allBills.forEach(bill => {
-
-    // ===========================
-    // SOMEONE OWES YOU
-    // ===========================
-    if (bill.createdBy === session.email) {
-
-        Object.keys(bill.settlements).forEach(member => {
-
-            if (
-                member !== session.email &&
-                bill.settlements[member] === false
-            ) {
-
-                othersOweYou.push({
-
-                    billId: bill.id,
-
-                    title: bill.title,
-
-                    member,
-
-                    amount: bill.shares[member]
-
-                });
-            }
-        });
+        return;
     }
 
+    const settlementData = {
 
-    // ===========================
-    // YOU OWE SOMEONE
-    // ===========================
-    else {
+        payer: session.email,
 
-        if (
-            bill.settlements &&
-            bill.settlements[session.email] === false
-        ) {
+        receiver: receiver,
 
-            youOwe.push({
+        amount: amount,
 
-                billId: bill.id,
+        status: 'Pending'
 
-                title: bill.title,
+    };
 
-                creator: bill.createdBy,
+    try {
 
-                amount: bill.shares[session.email]
+        const response =
+            await fetch(API_URL, {
+
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+                body: JSON.stringify(
+                    settlementData
+                )
 
             });
+
+        if (!response.ok) {
+
+            throw new Error(
+                'Failed to save'
+            );
+
         }
+
+        alert('Due added successfully!');
+
+        document.getElementById('receiver').value = '';
+
+        document.getElementById('amount').value = '';
+
+        loadSettlements();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert('Error adding due');
+
     }
 
 });
 
 
 // ===============================
-// RENDER YOU OWE
+// 📦 LOAD SETTLEMENTS
 // ===============================
-if (youOwe.length === 0) {
+async function loadSettlements() {
 
-    youOweList.innerHTML =
-        "No pending dues.";
+    try {
 
-} else {
+        const response =
+            await fetch(
+                `${API_URL}/${session.email}`
+            );
 
-    youOweList.innerHTML =
-    youOwe.map(item => `
+        const settlements =
+            await response.json();
 
-        <div class="subcard">
-
-            <strong>
-                ${item.title}
-            </strong>
-
-            <br><br>
-
-            ₹${item.amount}
-
-            <br>
-
-            <small>
-                Pay to:
-                ${item.creator}
-            </small>
-
-            <br><br>
-
-            <a
-              class="btn"
-              href="${generateUPILink(
-                item.creator,
-                item.amount,
-                item.title
-              )}"
-            >
-              💳 Pay via GPay
-            </a>
-
-            <br><br>
-
-            <button
-              class="btn"
-              onclick="
-                generateQR(
-                  '${item.creator}',
-                  '${item.amount}',
-                  '${item.title}'
-                )
-              "
-            >
-              📷 Generate QR
-            </button>
-
-            <br><br>
-
-            <button
-                class="btn"
-                onclick="markAsPaid(${item.billId})"
-            >
-                ✅ Mark Settled
-            </button>
-
-        </div>
-
-    `).join("");
-}
-
-
-// ===============================
-// RENDER OTHERS OWE YOU
-// ===============================
-if (othersOweYou.length === 0) {
-
-    othersOweList.innerHTML =
-        "Nobody owes you.";
-
-} else {
-
-    othersOweList.innerHTML =
-        othersOweYou.map(item => `
-
-            <div class="subcard">
-
-                <strong>
-                    ${item.title}
-                </strong>
-
-                <br><br>
-
-                ₹${item.amount}
-
-                <br>
-
-                <small>
-                    Pending from:
-                    ${item.member}
-                </small>
-
-            </div>
-
-        `).join("");
-}
-
-
-
-// ===============================
-// MARK AS PAID
-// ===============================
-function markAsPaid(billId) {
-
-    const billIndex =
-        allBills.findIndex(
-            bill => bill.id === billId
+        renderSettlements(
+            settlements
         );
 
-    if (billIndex === -1) return;
-
-
-    // mark settlement
-    allBills[billIndex]
-        .settlements[session.email] = true;
-
-
-    // save
-    localStorage.setItem(
-        "fs_bills",
-        JSON.stringify(allBills)
-    );
-
-
-    alert("Payment marked as settled!");
-
-    location.reload();
-}
-// ===============================
-// 💳 GENERATE UPI LINK
-// ===============================
-function generateUPILink(receiverEmail, amount, note) {
-
-    const allSettings =
-        JSON.parse(localStorage.getItem("fs_settings")) || {};
-
-    const receiverSettings =
-        allSettings[receiverEmail];
-
-    if (!receiverSettings || !receiverSettings.upiId) {
-
-        return "#";
     }
 
-    const upiId =
-        receiverSettings.upiId;
+    catch (error) {
 
-    const upiName =
-        receiverSettings.upiName || "Fare Share User";
+        console.error(error);
 
-    return `
-upi://pay?pa=${upiId}
-&pn=${encodeURIComponent(upiName)}
-&am=${amount}
-&cu=INR
-&tn=${encodeURIComponent(note)}
-    `.replace(/\s/g, "");
+    }
+
 }
 
+
 // ===============================
-// 📷 GENERATE QR
+// 🎨 RENDER SETTLEMENTS
 // ===============================
-function generateQR(receiverEmail, amount, note) {
+function renderSettlements(
+    settlements
+) {
 
-    const qrContainer =
-        document.getElementById("qrContainer");
-
-    qrContainer.innerHTML = "";
-
-
-    // ===========================
-    // RECEIVER SETTINGS
-    // ===========================
-    const allSettings =
-        JSON.parse(localStorage.getItem("fs_settings")) || {};
-
-    const receiverSettings =
-        allSettings[receiverEmail];
-
+    const duesList =
+        document.getElementById(
+            'duesList'
+        );
 
     if (
-        !receiverSettings ||
-        !receiverSettings.upiId
+        !settlements ||
+        settlements.length === 0
     ) {
 
-        qrContainer.innerHTML =
-            "Receiver UPI ID not found.";
+        duesList.innerHTML = `
+
+            <p class="note">
+                No pending dues.
+            </p>
+
+        `;
 
         return;
     }
 
+    duesList.innerHTML = '';
 
-    // ===========================
-    // CREATE UPI LINK
-    // ===========================
-    const upiLink =
-        generateUPILink(
-            receiverEmail,
-            amount,
-            note
-        );
+    settlements.forEach(
+        settlement => {
 
+        duesList.innerHTML += `
 
-    // ===========================
-    // TITLE
-    // ===========================
-    const title =
-        document.createElement("h4");
+            <div class="subcard">
 
-    title.textContent =
-        `Scan to pay ₹${amount}`;
+                <h3>
+                    ₹ ${settlement.amount}
+                </h3>
 
-    qrContainer.appendChild(title);
+                <br>
 
+                <p>
+                    <strong>
+                        Receiver:
+                    </strong>
 
-    // ===========================
-    // QR BOX
-    // ===========================
-    const qrDiv =
-        document.createElement("div");
+                    ${settlement.receiver}
+                </p>
 
-    qrDiv.id = "paymentQR";
+                <br>
 
-    qrDiv.style.marginTop = "15px";
+                <p>
+                    <strong>
+                        Status:
+                    </strong>
 
-    qrContainer.appendChild(qrDiv);
+                    ${settlement.status}
+                </p>
 
+            </div>
 
-    // ===========================
-    // GENERATE QR
-    // ===========================
-    new QRCode(qrDiv, {
+        `;
 
-        text: upiLink,
-
-        width: 220,
-
-        height: 220
     });
 
-
-    // ===========================
-    // SHOW DETAILS
-    // ===========================
-    const details =
-        document.createElement("p");
-
-    details.style.marginTop = "15px";
-
-    details.innerHTML = `
-
-        <strong>
-            UPI ID:
-        </strong>
-
-        ${receiverSettings.upiId}
-
-        <br><br>
-
-        <strong>
-            Payment Note:
-        </strong>
-
-        ${note}
-
-    `;
-
-    qrContainer.appendChild(details);
-
 }
+
+
+// ===============================
+// 🚀 INITIAL LOAD
+// ===============================
+loadSettlements();

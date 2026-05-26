@@ -13,70 +13,217 @@
     setTimeout(()=>{ if(div) div.remove(); }, 5000);
   }
 
-  // basic storage API
-  const Storage = {
-    getUsers(){
-      try {
-        const raw = localStorage.getItem('fs_users');
-        return raw ? JSON.parse(raw) : [];
-      } catch(e){ return []; }
-    },
-    saveUsers(arr){ localStorage.setItem('fs_users', JSON.stringify(arr)); },
-    findByEmail(email){
-      const users = Storage.getUsers();
-      return users.find(u => u.email.toLowerCase() === email.toLowerCase());
-    },
-    addUser(user){
-      const users = Storage.getUsers();
-      users.push(user);
-      Storage.saveUsers(users);
-    },
-    updateUser(email, data){
-      let users = Storage.getUsers();
-      users = users.map(u => u.email.toLowerCase()===email.toLowerCase()? {...u,...data}:u);
-      Storage.saveUsers(users);
-    }
-  };
+  
 
   // If register page exists on DOM
   const regForm = document.getElementById('registerForm');
-  if(regForm){
-    regForm.addEventListener('submit', function(e){
+
+  if (regForm) {
+
+    regForm.addEventListener('submit', async function (e) {
+
       e.preventDefault();
-      const name = el('regName').value.trim();
-      const email = el('regEmail').value.trim();
-      const pass = el('regPass').value;
-      const phone = el('regPhone').value.trim();
-      const msgBox = el('regMsg');
 
-      if(!name || !email || !pass){ showMsg(msgBox,'Please fill name, email and password.',false); return; }
-      if(Storage.findByEmail(email)){ showMsg(msgBox,'Email already registered. Please login.',false); return; }
+      const name =
+        el('regName').value.trim();
 
-      Storage.addUser({name,email,password:pass,phone});
-      showMsg(msgBox,'Registration successful! Redirecting to login...',true);
-      setTimeout(()=>{ window.location = 'login.html'; }, 1200);
+      const email =
+        el('regEmail').value.trim();
+
+      const pass =
+        el('regPass').value;
+
+      const phone =
+        el('regPhone').value.trim();
+
+      const msgBox =
+        el('regMsg');
+
+
+      if (!name || !email || !pass) {
+
+        showMsg(
+          msgBox,
+          'Please fill all required fields.',
+          false
+        );
+
+        return;
+      }
+
+
+      try {
+
+        const response = await fetch(
+          'http://localhost:8081/api/auth/register',
+          {
+
+            method: 'POST',
+
+            headers: {
+              'Content-Type': 'application/json'
+            },
+
+            body: JSON.stringify({
+
+              username: name,
+
+              email: email,
+
+              password: pass,
+
+              monthlyBudget: 0
+            })
+          }
+        );
+
+        const data = await response.json();
+
+
+        if (data.success) {
+
+          showMsg(
+            msgBox,
+            'Registration successful! Redirecting...',
+            true
+          );
+
+          setTimeout(() => {
+
+            window.location =
+              'login.html';
+
+          }, 1200);
+
+        } else {
+
+          showMsg(
+            msgBox,
+            data.message,
+            false
+          );
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+        showMsg(
+          msgBox,
+          'Server error.',
+          false
+        );
+      }
+
     });
+
   }
+  
 
   // Login form
   const loginForm = document.getElementById('loginForm');
-  if(loginForm){
-    loginForm.addEventListener('submit', function(e){
+
+  if (loginForm) {
+
+    loginForm.addEventListener('submit', async function (e) {
+
       e.preventDefault();
-      const email = el('loginEmail').value.trim();
-      const pass = el('loginPass').value;
-      const msgBox = el('loginMsg');
 
-      const user = Storage.findByEmail(email);
-      if(!user){ showMsg(msgBox,'No account found with this email.',false); return; }
-      if(user.password !== pass){ showMsg(msgBox,'Incorrect password.',false); return; }
+      const email =
+        el('loginEmail').value.trim();
 
-      // store a simple session
-      localStorage.setItem('fs_session', JSON.stringify({email: user.email, name: user.name}));
-      showMsg(msgBox,'Login successful. Redirecting...',true);
-      setTimeout(()=>{ window.location = 'dashboard.html'; }, 800);
+      const pass =
+        el('loginPass').value;
+
+      const msgBox =
+        el('loginMsg');
+
+
+      try {
+
+        const response = await fetch(
+          'http://localhost:8081/api/auth/login',
+          {
+
+            method: 'POST',
+
+            headers: {
+              'Content-Type': 'application/json'
+            },
+
+            body: JSON.stringify({
+
+              email: email,
+
+              password: pass
+
+            })
+          }
+        );
+
+        const data = await response.json();
+
+
+        if (!data.success) {
+
+          showMsg(
+            msgBox,
+            data.message,
+            false
+          );
+
+          return;
+        }
+
+
+        // =========================
+        // SAVE SESSION TEMPORARILY
+        // =========================
+
+        localStorage.setItem(
+          'fs_session',
+
+          JSON.stringify({
+
+            email: data.user.email,
+
+            name: data.user.username,
+
+            id: data.user.id
+
+          })
+        );
+
+
+        showMsg(
+          msgBox,
+          'Login successful!',
+          true
+        );
+
+
+        setTimeout(() => {
+
+          window.location =
+            'dashboard.html';
+
+        }, 1000);
+
+      } catch (error) {
+
+        console.error(error);
+
+        showMsg(
+          msgBox,
+          'Server error.',
+          false
+        );
+      }
+
     });
+
   }
+ 
 
   // Forgot password: Step1 - request code
   const forgotForm = document.getElementById('forgotForm');

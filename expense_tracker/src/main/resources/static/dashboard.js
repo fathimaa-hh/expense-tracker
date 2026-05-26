@@ -1,346 +1,143 @@
-document.addEventListener("DOMContentLoaded", () => {
+// ===============================
+// 🔐 SESSION CHECK
+// ===============================
+const s = localStorage.getItem('fs_session');
 
-    // =========================
-    // 🔐 SESSION CHECK
-    // =========================
+if (!s) {
+  window.location = 'login.html';
+}
 
-    const sessionData =
-        localStorage.getItem("fs_session");
+const session = JSON.parse(s);
 
-    if (!sessionData) {
 
-        window.location.href = "login.html";
-        return;
+// ===============================
+// 👋 WELCOME MESSAGE
+// ===============================
+document.getElementById('welcomeMsg').textContent =
+  `Welcome back, ${session.name}!`;
 
-    }
 
-    const session =
-        JSON.parse(sessionData);
+// ===============================
+// 🌐 LOAD EXPENSES FROM BACKEND
+// ===============================
+fetch(`http://localhost:8081/api/expenses/${session.email}`)
 
-    document.getElementById("welcomeMsg")
-        .textContent =
-        `Hello, ${session.name}! Welcome back.`;
+.then(response => response.json())
 
+.then(expenses => {
 
+  console.log(expenses);
 
-    // =========================
-    // 📦 LOAD DATA
-    // =========================
+  updateDashboard(expenses);
 
-    const allBills =
-        JSON.parse(localStorage.getItem("fs_bills")) || [];
+})
 
-    const allGroups =
-        JSON.parse(localStorage.getItem("fs_groups")) || [];
+.catch(error => {
 
-    const settings =
-        JSON.parse(localStorage.getItem("fs_settings")) || {};
+  console.error(error);
 
+  alert('Failed to load dashboard.');
 
+});
 
-    // =========================
-    // ⚙ USER SETTINGS
-    // =========================
 
-    const monthlyBudget =
-        Number(settings.monthlyBudget) || 0;
+// ===============================
+// 📊 UPDATE DASHBOARD
+// ===============================
+function updateDashboard(expenses) {
 
-    const alertLimit =
-        Number(settings.alertLimit) || 80;
+  // =========================
+  // TOTAL SPENT
+  // =========================
+  let totalSpent = 0;
 
+  expenses.forEach(expense => {
 
+    totalSpent += expense.amount;
 
-    // =========================
-    // 👤 USER RELATED BILLS
-    // =========================
+  });
 
-    const userBills = allBills.filter(bill => {
+  document.getElementById('totalSpent').textContent =
+    `₹${totalSpent}`;
 
-        // Personal bill created by user
-        if (
-            bill.createdBy === session.email &&
-            !bill.isSplit
-        ) {
-            return true;
-        }
 
-        // Split member bill
-        if (
-            bill.selectedMembers &&
-            bill.selectedMembers.includes(session.email)
-        ) {
-            return true;
-        }
+  // =========================
+  // TOTAL BILLS
+  // =========================
+  document.getElementById('totalBills').textContent =
+    expenses.length;
 
-        return false;
 
-    });
+  // =========================
+  // LATEST CATEGORY
+  // =========================
+  if (expenses.length > 0) {
 
+    const latestExpense =
+      expenses[expenses.length - 1];
 
+    document.getElementById('latestCategory').textContent =
+      latestExpense.category;
 
-    // =========================
-    // 💰 CALCULATE TOTAL SPENT
-    // =========================
+  }
 
-    let totalSpent = 0;
 
-    userBills.forEach(bill => {
+  // =========================
+  // RECENT EXPENSES
+  // =========================
+  const recentBox =
+    document.getElementById('recentExpenses');
 
-        // If not split
-        if (!bill.isSplit) {
+  if (expenses.length === 0) {
 
-            totalSpent += Number(bill.amount);
+    recentBox.innerHTML =
+      'No expenses found.';
 
-        }
+    return;
+  }
 
-        // Split bill
-        else {
+  recentBox.innerHTML =
+    [...expenses]
+    .reverse()
+    .slice(0, 5)
+    .map(expense => `
 
-            if (
-                bill.selectedMembers &&
-                bill.selectedMembers.length > 0
-            ) {
+      <div class="subcard">
 
-                const splitAmount =
-                    Number(bill.amount) /
-                    bill.selectedMembers.length;
+        <strong>
+          ${expense.title}
+        </strong>
 
-                totalSpent += splitAmount;
-            }
-        }
+        <br><br>
 
-    });
+        ₹${expense.amount}
 
+        <br><br>
 
+        <small>
+          📂 ${expense.category}
+        </small>
 
-    // =========================
-    // 💳 BUDGET REMAINING
-    // =========================
+        <br>
 
-    const remaining =
-        monthlyBudget - totalSpent;
+        <small>
+          📅 ${expense.expenseDate}
+        </small>
 
-    document.getElementById("totalSpent")
-        .textContent =
-        `₹ ${totalSpent.toFixed(2)}`;
+      </div>
 
-    document.getElementById("budgetRemaining")
-        .textContent =
-        `₹ ${remaining.toFixed(2)}`;
+    `).join('');
+}
 
 
+// ===============================
+// 🚪 LOGOUT
+// ===============================
+document.getElementById('logoutBtn')
+.addEventListener('click', () => {
 
-    // =========================
-    // ⏳ PENDING SETTLEMENTS
-    // =========================
+  localStorage.removeItem('fs_session');
 
-    let pendingAmount = 0;
-
-    userBills.forEach(bill => {
-
-        if (
-            bill.isSplit &&
-            bill.selectedMembers &&
-            bill.selectedMembers.includes(session.email)
-        ) {
-
-            const share =
-                Number(bill.amount) /
-                bill.selectedMembers.length;
-
-            pendingAmount += share;
-
-        }
-
-    });
-
-    document.getElementById("pendingSettlements")
-        .textContent =
-        `₹ ${pendingAmount.toFixed(2)}`;
-
-
-
-    // =========================
-    // 📅 UPCOMING BILLS
-    // =========================
-
-    const upcomingContainer =
-        document.getElementById("upcomingBills");
-
-    const today =
-        new Date();
-
-    const upcomingBills =
-        userBills.filter(bill => {
-
-            if (!bill.date) return false;
-
-            return new Date(bill.date) >= today;
-
-        });
-
-
-
-    if (upcomingBills.length === 0) {
-
-        upcomingContainer.innerHTML =
-            "No upcoming bills.";
-
-    }
-
-    else {
-
-        upcomingContainer.innerHTML =
-            upcomingBills.map(bill => {
-
-                let displayAmount =
-                    bill.amount;
-
-                if (
-                    bill.isSplit &&
-                    bill.selectedMembers &&
-                    bill.selectedMembers.length > 0
-                ) {
-
-                    displayAmount =
-                        bill.amount /
-                        bill.selectedMembers.length;
-                }
-
-                return `
-
-                    <div class="subcard">
-
-                        <strong>
-                            ${bill.title}
-                        </strong>
-
-                        <br>
-
-                        ₹ ${displayAmount.toFixed(2)}
-
-                        <br>
-
-                        <small>
-                            📅 ${bill.date}
-                        </small>
-
-                        <br>
-
-                        <small>
-                            📂 ${bill.category}
-                        </small>
-
-                    </div>
-
-                `;
-
-            }).join("");
-
-    }
-
-
-
-    // =========================
-    // 🚨 BUDGET ALERT
-    // =========================
-
-    const budgetAlert =
-        document.getElementById("budgetAlert");
-
-    const alertMessage =
-        document.getElementById("alertMessage");
-
-    if (monthlyBudget > 0) {
-
-        const usedPercentage =
-            (totalSpent / monthlyBudget) * 100;
-
-        if (usedPercentage >= alertLimit) {
-
-            budgetAlert.style.display = "block";
-
-            alertMessage.textContent =
-                `You have used ${usedPercentage.toFixed(0)}% of your monthly budget.`;
-
-        }
-
-        else {
-
-            budgetAlert.style.display = "none";
-
-        }
-
-    }
-
-
-
-    // =========================
-    // 🕒 RECENT ACTIVITY
-    // =========================
-
-    const recentActivity =
-        document.getElementById("recentActivity");
-
-    if (userBills.length === 0) {
-
-        recentActivity.innerHTML =
-            "No recent activity.";
-
-    }
-
-    else {
-
-        const latestBills =
-            [...userBills]
-            .reverse()
-            .slice(0, 5);
-
-        recentActivity.innerHTML =
-            latestBills.map(bill => `
-
-                <div class="subcard">
-
-                    <strong>
-                        ${bill.title}
-                    </strong>
-
-                    <br>
-
-                    ₹ ${bill.amount}
-
-                    <br>
-
-                    <small>
-                        ${bill.category}
-                    </small>
-
-                    <br>
-
-                    <small>
-                        📅 ${bill.date}
-                    </small>
-
-                </div>
-
-            `).join("");
-
-    }
-
-
-
-    // =========================
-    // 🚪 LOGOUT
-    // =========================
-
-    document.getElementById("logoutBtn")
-        .addEventListener("click", () => {
-
-            localStorage.removeItem("fs_session");
-
-            window.location.href =
-                "login.html";
-
-        });
+  window.location = 'login.html';
 
 });

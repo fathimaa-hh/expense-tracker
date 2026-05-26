@@ -4,192 +4,251 @@
 const s = localStorage.getItem('fs_session');
 
 if (!s) {
-  window.location = 'login.html';
+
+    window.location = 'login.html';
+
 }
 
 const session = JSON.parse(s);
 
-document.getElementById('userMsg').textContent =
-  `Hello, ${session.name}! Manage your expense groups below.`;
+
+// ===============================
+// 👋 USER MESSAGE
+// ===============================
+document.getElementById('welcomeMsg').textContent =
+    `Hello ${session.name}, manage your groups here.`;
 
 
 // ===============================
-// 📦 LOAD GROUPS
+// 🌐 API URL
 // ===============================
-let groups = JSON.parse(localStorage.getItem('fs_groups')) || [];
+const API_URL =
+    'http://localhost:8081/api/groups';
+
+
+// ===============================
+// 📦 LOAD GROUPS FROM BACKEND
+// ===============================
+async function loadGroups() {
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/${session.email}`
+            );
+
+        const groups =
+            await response.json();
+
+        renderGroups(groups);
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert('Failed to load groups');
+
+    }
+
+}
 
 
 // ===============================
 // 🎨 RENDER GROUPS
 // ===============================
-function renderGroups() {
+function renderGroups(groups) {
 
-  const groupList = document.getElementById('groupList');
+    const groupList =
+        document.getElementById('groupList');
 
-  // Show only groups created by current user
-  const userGroups = groups.filter(
-    g => g.createdBy === session.email
-  );
+    if (!groups || groups.length === 0) {
 
-  if (userGroups.length === 0) {
-    groupList.innerHTML = `
-      <div class="subcard">
-        No groups created yet.
-      </div>
-    `;
-    return;
-  }
+        groupList.innerHTML = `
+            <p class="note">
+                No groups created yet.
+            </p>
+        `;
 
-  groupList.innerHTML = userGroups.map((group, index) => `
+        return;
+    }
 
-    <div class="subcard">
+    groupList.innerHTML = '';
 
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <h4>${group.name}</h4>
+    groups.forEach(group => {
 
-        <button 
-          class="btn-sm"
-          onclick="deleteGroup('${group.id}')"
-        >
-          🗑 Delete
-        </button>
-      </div>
+        const members =
+            group.members
+                ? group.members.split(',')
+                : [];
 
-      <p>
-        <strong>Created By:</strong>
-        ${group.createdBy}
-      </p>
+        groupList.innerHTML += `
 
-      <p>
-        <strong>Total Members:</strong>
-        ${group.members.length}
-      </p>
+            <div class="subcard">
 
-      <div style="margin-top:10px;">
-        <strong>Members:</strong>
+                <h3>
+                    ${group.name}
+                </h3>
 
-        <div style="margin-top:6px;">
-          ${group.members.map(member => `
-            <span class="member-chip">
-              ${member}
-            </span>
-          `).join('')}
-        </div>
-      </div>
+                <br>
 
-    </div>
+                <p>
+                    <strong>Created By:</strong>
+                    ${group.createdBy}
+                </p>
 
-  `).join('');
+                <br>
+
+                <p>
+                    <strong>Members:</strong>
+                    ${members.join(', ')}
+                </p>
+
+            </div>
+
+        `;
+
+    });
+
 }
 
 
 // ===============================
 // ➕ CREATE GROUP
 // ===============================
-document.getElementById('createGroupBtn')
-.addEventListener('click', () => {
+document
+.getElementById('createGroupBtn')
 
-  const groupName = document
-    .getElementById('groupName')
-    .value
-    .trim();
+.addEventListener('click', async () => {
 
-  const membersRaw = document
-    .getElementById('groupMembers')
-    .value
-    .trim();
+    const groupName =
+        document
+        .getElementById('groupName')
+        .value
+        .trim();
 
-  // Validation
-  if (!groupName || !membersRaw) {
-    alert('Please enter group name and members.');
-    return;
-  }
+    const membersInput =
+        document
+        .getElementById('groupMembers')
+        .value
+        .trim();
 
-  // Duplicate name check
-  const alreadyExists = groups.find(
-    g =>
-      g.name.toLowerCase() === groupName.toLowerCase()
-      &&
-      g.createdBy === session.email
-  );
+    if (!groupName || !membersInput) {
 
-  if (alreadyExists) {
-    alert('Group name already exists.');
-    return;
-  }
+        alert('Please fill all fields');
 
-  // Convert comma separated emails
-  let members = membersRaw
-    .split(',')
-    .map(m => m.trim())
-    .filter(Boolean);
+        return;
+    }
 
-  // Add creator automatically if not present
-  if (!members.includes(session.email)) {
-    members.unshift(session.email);
-  }
+    // ===============================
+    // MEMBERS ARRAY
+    // ===============================
+    const membersArray =
+        membersInput
+        .split(',')
+        .map(member => member.trim());
 
-  // Remove duplicates
-  members = [...new Set(members)];
+    // auto add logged-in user
+    if (
+        !membersArray.includes(session.email)
+    ) {
 
-  // Create group object
-  const newGroup = {
+        membersArray.push(session.email);
 
-    id: Date.now().toString(),
+    }
 
-    name: groupName,
+    // ===============================
+    // GROUP OBJECT
+    // ===============================
+    const groupData = {
 
-    members: members,
+        name: groupName,
 
-    createdBy: session.email,
+        createdBy: session.email,
 
-    createdAt: new Date().toISOString()
-  };
+        members: membersArray.join(',')
 
-  // Save
-  groups.push(newGroup);
+    };
 
-  localStorage.setItem(
-    'fs_groups',
-    JSON.stringify(groups)
-  );
 
-  // Reset form
-  document.getElementById('groupName').value = '';
-  document.getElementById('groupMembers').value = '';
+    // ===============================
+    // SAVE TO BACKEND
+    // ===============================
+    try {
 
-  // Refresh UI
-  renderGroups();
+        const response =
+            await fetch(API_URL, {
 
-  alert('Group created successfully!');
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+                body: JSON.stringify(groupData)
+
+            });
+
+        if (!response.ok) {
+
+            throw new Error('Failed');
+
+        }
+
+        const savedGroup =
+            await response.json();
+
+        console.log(savedGroup);
+
+        // ===============================
+        // TEMP LOCALSTORAGE BACKUP
+        // ===============================
+        let localGroups =
+            JSON.parse(
+                localStorage.getItem('fs_groups')
+            ) || [];
+
+        localGroups.push({
+
+            name: groupName,
+
+            createdBy: session.email,
+
+            members: membersArray
+
+        });
+
+        localStorage.setItem(
+            'fs_groups',
+            JSON.stringify(localGroups)
+        );
+
+        alert('Group created successfully!');
+
+        // clear fields
+        document.getElementById('groupName').value = '';
+
+        document.getElementById('groupMembers').value = '';
+
+        // reload groups
+        loadGroups();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert('Error creating group');
+
+    }
+
 });
-
-
-// ===============================
-// 🗑 DELETE GROUP
-// ===============================
-function deleteGroup(groupId) {
-
-  const confirmDelete = confirm(
-    'Are you sure you want to delete this group?'
-  );
-
-  if (!confirmDelete) return;
-
-  groups = groups.filter(
-    g => g.id !== groupId
-  );
-
-  localStorage.setItem(
-    'fs_groups',
-    JSON.stringify(groups)
-  );
-
-  renderGroups();
-}
 
 
 // ===============================
 // 🚀 INITIAL LOAD
 // ===============================
-renderGroups();
+loadGroups();

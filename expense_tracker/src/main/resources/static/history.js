@@ -1,221 +1,113 @@
 // ===============================
 // 🔐 SESSION CHECK
 // ===============================
-const s = localStorage.getItem("fs_session");
+const s = localStorage.getItem('fs_session');
 
 if (!s) {
-    window.location = "login.html";
+  window.location = 'login.html';
 }
 
 const session = JSON.parse(s);
 
-document.getElementById("userMsg").textContent =
-    `Hello, ${session.name}! Here is your transaction history.`;
+
+// ===============================
+// 👋 WELCOME
+// ===============================
+document.getElementById('welcomeMsg').textContent =
+  `Hello, ${session.name}! Here is your expense history.`;
 
 
 // ===============================
-// 📦 LOAD BILLS
+// 🌐 LOAD HISTORY
 // ===============================
-const allBills =
-    JSON.parse(localStorage.getItem("fs_bills")) || [];
+fetch(`http://localhost:8081/api/expenses/${session.email}`)
 
+.then(response => response.json())
 
-// current user related bills
-const userBills = allBills.filter(bill => {
+.then(expenses => {
 
-    // created by current user
-    if (bill.createdBy === session.email) {
-        return true;
-    }
+  renderHistory(expenses);
 
-    // included in split
-    if (
-        bill.selectedMembers &&
-        bill.selectedMembers.includes(session.email)
-    ) {
-        return true;
-    }
+})
 
-    return false;
+.catch(error => {
+
+  console.error(error);
+
+  alert('Failed to load history.');
+
 });
 
 
 // ===============================
-// 📊 SUMMARY
+// 📜 RENDER HISTORY
 // ===============================
-document.getElementById("totalTransactions")
-.textContent = userBills.length;
+function renderHistory(expenses) {
 
+  const historyBox =
+    document.getElementById('historyList');
 
-let totalPaid = 0;
+  if (expenses.length === 0) {
 
-let pending = 0;
-
-
-userBills.forEach(bill => {
-
-    // creator paid initially
-    if (bill.createdBy === session.email) {
-        totalPaid += Number(bill.amount);
-    }
-
-    // pending settlement
-    if (
-        bill.settlements &&
-        bill.settlements[session.email] === false
-    ) {
-        pending++;
-    }
-});
-
-
-document.getElementById("totalPaid")
-.textContent = `₹${totalPaid}`;
-
-document.getElementById("pendingCount")
-.textContent = pending;
-
-
-// ===============================
-// 📜 ACTIVITY FEED
-// ===============================
-const activityFeed =
-    document.getElementById("activityFeed");
-
-
-if (userBills.length === 0) {
-
-    activityFeed.innerHTML =
-        "No transaction history yet.";
-
-} else {
-
-    const latest =
-        [...userBills]
-        .reverse();
-
-    activityFeed.innerHTML =
-        latest.map(bill => {
-
-            let message = "";
-
-            // creator activity
-            if (bill.createdBy === session.email) {
-
-                message =
-                    `✅ You paid ₹${bill.amount}
-                     for "${bill.title}"`;
-
-            } else {
-
-                message =
-                    `💸 You were added to
-                     "${bill.title}" split`;
-            }
-
-            return `
-
-                <div class="subcard">
-
-                    <strong>
-                        ${message}
-                    </strong>
-
-                    <br><br>
-
-                    <small>
-                        📅 ${bill.date}
-                    </small>
-
-                    <br>
-
-                    <small>
-                        👥 ${bill.group}
-                    </small>
-
-                    <br>
-
-                    <small>
-                        🕒 ${new Date(
-                            bill.createdAt
-                        ).toLocaleString()}
-                    </small>
-
-                </div>
-
-            `;
-        }).join("");
-}
-
-
-// ===============================
-// 📋 TRANSACTION TABLE
-// ===============================
-const tableBody =
-    document.getElementById("historyTableBody");
-
-
-if (userBills.length === 0) {
-
-    tableBody.innerHTML = `
-
-        <tr>
-
-            <td colspan="5">
-                No transactions available.
-            </td>
-
-        </tr>
-
+    historyBox.innerHTML = `
+      <p class="note">
+        No expense history found.
+      </p>
     `;
 
-} else {
+    return;
+  }
 
-    const sortedBills =
-        [...userBills]
-        .reverse();
+  historyBox.innerHTML =
+    [...expenses]
+    .reverse()
+    .map(expense => `
 
-    sortedBills.forEach(bill => {
+      <div class="subcard">
 
-        let status = "Paid";
+        <h3>
+          ${expense.title}
+        </h3>
 
-        // settlement check
-        if (
-            bill.settlements &&
-            bill.settlements[session.email] === false
-        ) {
+        <p>
+          💰 Amount:
+          ₹${expense.amount}
+        </p>
 
-            status = "Pending";
-        }
+        <p>
+          📂 Category:
+          ${expense.category}
+        </p>
 
-        const row =
-            document.createElement("tr");
+        <p>
+          📅 Date:
+          ${expense.expenseDate}
+        </p>
 
-        row.innerHTML = `
+        <p>
+          👥 Group:
+          ${expense.groupName || 'Personal'}
+        </p>
 
-            <td>
-                ${bill.date}
-            </td>
+        <p>
+          🔀 Split:
+          ${expense.splitType}
+        </p>
 
-            <td>
-                ${bill.title}
-            </td>
+      </div>
 
-            <td>
-                ${bill.createdBy}
-            </td>
-
-            <td>
-                ₹${bill.amount}
-            </td>
-
-            <td>
-                ${status}
-            </td>
-
-        `;
-
-        tableBody.appendChild(row);
-
-    });
+    `).join('');
 }
+
+
+// ===============================
+// 🚪 LOGOUT
+// ===============================
+document.getElementById('logoutBtn')
+.addEventListener('click', () => {
+
+  localStorage.removeItem('fs_session');
+
+  window.location = 'login.html';
+
+});

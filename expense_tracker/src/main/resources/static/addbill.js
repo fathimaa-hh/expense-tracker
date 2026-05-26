@@ -12,11 +12,11 @@ const session = JSON.parse(s);
 document.getElementById('userMsg').textContent =
   `Hello, ${session.name}! Add and manage your bills here.`;
 
+
 // ===============================
 // 📦 LOAD DATA
 // ===============================
-let allBills =
-  JSON.parse(localStorage.getItem('fs_bills')) || [];
+let allBills = [];
 
 let allGroups =
   JSON.parse(localStorage.getItem('fs_groups')) || [];
@@ -24,11 +24,15 @@ let allGroups =
 let personalData =
   JSON.parse(localStorage.getItem('fs_personalData')) || {};
 
+let userBills = [];
+
+
 // ===============================
 // 👤 AUTO FILL PAID BY
 // ===============================
 document.getElementById('paidBy').value =
   session.email;
+
 
 // ===============================
 // 👥 GROUP DROPDOWN
@@ -53,6 +57,7 @@ userGroups.forEach(group => {
   `;
 });
 
+
 // ===============================
 // 🔄 SPLIT YES/NO
 // ===============================
@@ -71,6 +76,7 @@ isSplit.addEventListener('change', () => {
   }
 
 });
+
 
 // ===============================
 // 👥 MEMBER SELECTION
@@ -108,6 +114,7 @@ groupSelect.addEventListener('change', () => {
 
 });
 
+
 // ===============================
 // 🔄 CUSTOM SPLIT TOGGLE
 // ===============================
@@ -126,6 +133,7 @@ splitType.addEventListener('change', () => {
   }
 
 });
+
 
 // ===============================
 // ➕ ADD BILL
@@ -182,23 +190,64 @@ document.getElementById('addBillBtn')
       settlementStatus: 'paid'
     };
 
-    allBills.push(personalBill);
+    // ===============================
+    // SAVE TO BACKEND
+    // ===============================
+    fetch('http://localhost:8081/api/expenses', {
 
-    localStorage.setItem(
-      'fs_bills',
-      JSON.stringify(allBills)
-    );
+      method: 'POST',
 
-    addToPersonalExpenses(
-      session.email,
-      personalBill
-    );
+      headers: {
+        'Content-Type': 'application/json'
+      },
 
-    alert('Personal expense added successfully!');
+      body: JSON.stringify({
 
-    resetForm();
+        title: title,
 
-    renderBills();
+        amount: amount,
+
+        category: category,
+
+        expenseDate: date,
+
+        createdBy: session.email,
+
+        groupName: 'Personal',
+
+        splitType: 'no-split'
+
+      })
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+      // localStorage backup
+      addToPersonalExpenses(
+        session.email,
+        personalBill
+      );
+
+      alert('Expense added successfully!');
+
+      console.log(data);
+
+      resetForm();
+
+      loadBillsFromBackend();
+
+    })
+
+    .catch(error => {
+
+      console.error(error);
+
+      alert('Failed to save expense.');
+
+    });
 
     return;
   }
@@ -227,13 +276,16 @@ document.getElementById('addBillBtn')
   if (splitType.value === 'equal') {
 
     const splitAmount =
-      amount / selectedMembers.length;
+      amount / (selectedMembers.length + 1);
 
     selectedMembers.forEach(member => {
 
       splitDetails[member] =
         parseFloat(splitAmount.toFixed(2));
     });
+
+    splitDetails[session.email] =
+      parseFloat(splitAmount.toFixed(2));
 
   }
 
@@ -264,173 +316,115 @@ document.getElementById('addBillBtn')
   // ===============================
   // CREATE BILL
   // ===============================
-  // ===============================
-// 💳 SETTLEMENT DATA
-// ===============================
-
-  const settlements = {};
-
-  if (isSplit) {
-
-      selectedMembers.forEach(member => {
-
-           settlements[member] = false;
-
-      });
-
-  }
-
-
-
-// ===============================
-// 💾 BILL OBJECT
-// ===============================
-
-  const shares = {};
-const settlements = {};
-
-
-// ===============================
-// PERSONAL EXPENSE
-// ===============================
-if (!isSplit) {
-
-    shares[session.email] = amount;
-
-    settlements[session.email] = true;
-
-}
-
-
-// ===============================
-// SPLIT BILL
-// ===============================
-else {
-
-    const allMembers = [
-        session.email,
-        ...selectedMembers
-    ];
-
-
-    // remove duplicates
-    const uniqueMembers =
-        [...new Set(allMembers)];
-
-
-    // ===========================
-    // EQUAL SPLIT
-    // ===========================
-    if (splitType === "equal") {
-
-        const splitAmount =
-            amount / uniqueMembers.length;
-
-        uniqueMembers.forEach(member => {
-
-            shares[member] =
-                Number(splitAmount.toFixed(2));
-
-            // creator already paid
-            settlements[member] =
-                member === session.email;
-
-        });
-
-    }
-
-
-    // ===========================
-    // CUSTOM SPLIT
-    // ===========================
-    else {
-
-        uniqueMembers.forEach(member => {
-
-            shares[member] =
-                customSplit[member] || 0;
-
-            settlements[member] =
-                member === session.email;
-
-        });
-
-    }
-
-}
-
-
-// ===============================
-// CREATE BILL OBJECT
-// ===============================
   const bill = {
 
-      id: Date.now(),
+    id: Date.now(),
 
-      title,
+    title,
 
-      amount,
+    amount,
 
-      date,
+    date,
 
-      category,
+    category,
 
-      isSplit,
+    type: 'group',
 
-      group: selectedGroup || "Personal",
+    group: groupSelect.value,
 
-      selectedMembers,
+    selectedMembers,
 
-      splitType,
+    splitType: splitType.value,
 
-      customSplit,
+    customSplit: splitDetails,
 
-      shares,
+    paidBy: session.email,
 
-      settlements,
+    createdBy: session.email,
 
-      createdBy: session.email,
+    paymentMethod,
 
-      createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString()
   };
 
-  
-  allBills.push(bill);
-
-  localStorage.setItem(
-    'fs_bills',
-    JSON.stringify(allBills)
-  );
-
   // ===============================
-  // ADD EACH MEMBER SHARE
+  // SAVE GROUP BILL
   // ===============================
-  selectedMembers.forEach(member => {
+  fetch('http://localhost:8081/api/expenses', {
 
-    addToPersonalExpenses(member, {
+    method: 'POST',
 
-      title,
-      amount: splitDetails[member],
-      date,
-      category,
+    headers: {
+      'Content-Type': 'application/json'
+    },
 
-      group: groupSelect.value,
+    body: JSON.stringify({
 
-      type: 'split-share',
+      title: bill.title,
 
-      paid:
-        member === session.email
+      amount: bill.amount,
+
+      expenseDate: bill.date,
+
+      category: bill.category,
+
+      groupName: bill.group,
+
+      splitType: bill.splitType,
+
+      createdBy: bill.createdBy
+    })
+
+  })
+
+  .then(response => response.json())
+
+  .then(savedBill => {
+
+    allBills.push(bill);
+
+    localStorage.setItem(
+      'fs_bills',
+      JSON.stringify(allBills)
+    );
+
+    Object.keys(splitDetails).forEach(member => {
+
+      addToPersonalExpenses(member, {
+
+        title,
+        amount: splitDetails[member],
+        date,
+        category,
+
+        group: groupSelect.value,
+
+        type: 'split-share',
+
+        paid:
+          member === session.email
+      });
+
     });
+
+    alert('Group expense added successfully!');
+
+    resetForm();
+
+    loadBillsFromBackend();
+
+  })
+
+  .catch(error => {
+
+    console.error(error);
+
+    alert('Error saving group bill.');
 
   });
 
-  alert('Group expense added successfully!');
-
-  resetForm();
-
-  renderBills();
-
 });
+
 
 // ===============================
 // 💾 ADD TO PERSONAL DATA
@@ -454,6 +448,35 @@ function addToPersonalExpenses(email, expense) {
   );
 }
 
+
+// ===============================
+// 🌐 LOAD USER BILLS FROM BACKEND
+// ===============================
+function loadBillsFromBackend() {
+
+  fetch(
+    `http://localhost:8081/api/expenses/${session.email}`
+  )
+
+  .then(response => response.json())
+
+  .then(data => {
+
+    userBills = data;
+
+    renderBills();
+
+  })
+
+  .catch(error => {
+
+    console.error(error);
+
+  });
+
+}
+
+
 // ===============================
 // 🧾 RENDER BILLS
 // ===============================
@@ -461,11 +484,6 @@ function renderBills() {
 
   const billList =
     document.getElementById('billList');
-
-  const userBills =
-    allBills.filter(
-      bill => bill.createdBy === session.email
-    );
 
   if (userBills.length === 0) {
 
@@ -493,7 +511,7 @@ function renderBills() {
         <br><br>
 
         <small>
-          📅 ${bill.date}
+          📅 ${bill.expenseDate}
         </small>
 
         <br>
@@ -505,26 +523,20 @@ function renderBills() {
         <br>
 
         <small>
-          💳 ${bill.paymentMethod}
+          👥 ${bill.groupName || 'Personal'}
         </small>
 
         <br>
 
         <small>
-          👤 Paid By:
-          ${bill.paidBy}
-        </small>
-
-        <br>
-
-        <small>
-          🔀 ${bill.type}
+          🔀 ${bill.splitType}
         </small>
 
       </div>
 
     `).join('');
 }
+
 
 // ===============================
 // 🔄 RESET FORM
@@ -552,7 +564,8 @@ function resetForm() {
   groupSection.style.display = 'none';
 }
 
+
 // ===============================
 // 🚀 INITIAL LOAD
 // ===============================
-renderBills();
+loadBillsFromBackend();

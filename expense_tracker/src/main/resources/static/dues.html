@@ -1,118 +1,113 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8">
 
-  <title>Pending Dues - Fare Share</title>
+    <meta charset="utf-8">
 
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>
+        Dues - Fare Share
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
 
 <body>
 
 <div class="wrap">
 
-<div class="card">
+    <div class="card">
 
-<img src="logojava.png"
-     class="logo"
-     alt="Fare Share">
+        <!-- ===================== -->
+        <!-- HEADER -->
+        <!-- ===================== -->
 
-<h2>
-Pending Settlements
-</h2>
+        <h2>
+            💳 Dues & Settlements
+        </h2>
 
-<p id="userMsg" class="note">
-Loading dues...
-</p>
-
-
-<!-- ======================= -->
-<!-- YOU OWE -->
-<!-- ======================= -->
-
-<h3 style="margin-top:25px;">
-You Owe
-</h3>
-
-<div id="youOweList"
-     class="group-list note">
-</div>
+        <p class="note">
+            Manage pending balances and settlements.
+        </p>
 
 
-<!-- ======================= -->
-<!-- 💳 PAYMENT QR -->
-<!-- ======================= -->
+        <!-- ===================== -->
+        <!-- ADD DUE FORM -->
+        <!-- ===================== -->
 
-<h3 style="margin-top:25px;">
-Payment QR
-</h3>
+        <div style="margin-top:25px;">
 
-<div
-  id="qrContainer"
-  class="group-list note"
->
+            <label>
+                Receiver Email
+            </label>
 
-Select a payment to generate QR.
+            <input
+                type="email"
+                id="receiver"
+                placeholder="Enter receiver email"
+            >
 
-</div>
+            <br><br>
+
+            <label>
+                Amount
+            </label>
+
+            <input
+                type="number"
+                id="amount"
+                placeholder="Enter amount"
+            >
+
+            <br><br>
+
+            <button
+                id="addDueBtn"
+                class="btn"
+            >
+                Add Due
+            </button>
+
+        </div>
 
 
-<!-- ======================= -->
-<!-- OTHERS OWE YOU -->
-<!-- ======================= -->
+        <!-- ===================== -->
+        <!-- DUES LIST -->
+        <!-- ===================== -->
 
-<h3 style="margin-top:25px;">
-Others Owe You
-</h3>
+        <h3 style="margin-top:30px;">
 
-<div id="othersOweList"
-     class="group-list note">
+            Pending Settlements
 
-No pending collections.
+        </h3>
 
-</div>
+        <div
+            id="duesList"
+            class="group-list"
+        >
+
+            No dues available.
+
+        </div>
 
 
-<!-- ======================= -->
-<!-- NAVIGATION -->
-<!-- ======================= -->
+        <!-- ===================== -->
+        <!-- FOOTER -->
+        <!-- ===================== -->
 
-<div class="quick-links"
-     style="margin-top:25px;">
+        <p class="footer">
 
-<a href="dashboard.html"
-   class="btn-outline">
-🏠 Dashboard
-</a>
+            Track shared payments and settlements.
 
-<a href="addbill.html"
-   class="btn-outline">
-➕ Add Bill
-</a>
+        </p>
 
-<a href="history.html"
-   class="btn-outline">
-📜 History
-</a>
-
-<a href="reports.html"
-   class="btn-outline">
-📊 Reports
-</a>
+    </div>
 
 </div>
-
-<p class="footer">
-Manage settlements and track dues.
-</p>
-
-</div>
-
-</div>
-
-<script src="auth.js"></script>
 
 <script src="dues.js"></script>
 

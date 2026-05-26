@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Dashboard - Fare Share</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -19,54 +20,72 @@
         class="logo"
       />
 
-      <h2>Welcome</h2>
+      <!-- Welcome -->
+      <h2>Dashboard</h2>
 
       <p id="welcomeMsg" class="note">
-        Loading...
+        Loading your dashboard...
       </p>
 
 
       <!-- ========================= -->
-      <!-- ✅ MONTHLY OVERVIEW -->
+      <!-- SUMMARY CARDS -->
       <!-- ========================= -->
-
-      <h3 style="margin-top:20px;">
-        Monthly Overview
-      </h3>
 
       <div class="card-grid">
 
-        <!-- Total Spent -->
+        <!-- Total Expenses -->
         <div class="subcard">
 
-          <h4>Total Spent</h4>
+          <h3>Total Expenses</h3>
 
-          <p id="totalSpent">
-            ₹ 0
+          <p
+            id="totalSpent"
+            style="
+              font-size:28px;
+              font-weight:bold;
+              margin-top:10px;
+            "
+          >
+            ₹0
           </p>
 
         </div>
 
 
-        <!-- Budget Remaining -->
+        <!-- Total Bills -->
         <div class="subcard">
 
-          <h4>Budget Remaining</h4>
+          <h3>Total Bills</h3>
 
-          <p id="budgetRemaining">
-            ₹ 0
+          <p
+            id="totalBills"
+            style="
+              font-size:28px;
+              font-weight:bold;
+              margin-top:10px;
+            "
+          >
+            0
           </p>
 
         </div>
 
 
-        <!-- Pending Settlements -->
+        <!-- Latest Category -->
         <div class="subcard">
 
-          <h4>Pending Settlements</h4>
+          <h3>Latest Category</h3>
 
-          <p id="pendingSettlements">
-            ₹ 0
+          <p
+            id="latestCategory"
+            style="
+              font-size:22px;
+              font-weight:bold;
+              margin-top:10px;
+            "
+          >
+            None
           </p>
 
         </div>
@@ -74,31 +93,29 @@
       </div>
 
 
-
       <!-- ========================= -->
-      <!-- ✅ UPCOMING BILLS -->
+      <!-- RECENT EXPENSES -->
       <!-- ========================= -->
 
-      <h3 style="margin-top:25px;">
-        Upcoming Bills
+      <h3 style="margin-top:30px;">
+        Recent Expenses
       </h3>
 
       <div
-        id="upcomingBills"
-        class="group-list note"
+        id="recentExpenses"
+        class="group-list"
       >
 
-        No upcoming bills.
+        No expenses found.
 
       </div>
 
 
-
       <!-- ========================= -->
-      <!-- ✅ QUICK LINKS -->
+      <!-- QUICK LINKS -->
       <!-- ========================= -->
 
-      <h3 style="margin-top:25px;">
+      <h3 style="margin-top:30px;">
         Quick Links
       </h3>
 
@@ -112,13 +129,6 @@
         </a>
 
         <a
-          href="personal.html"
-          class="btn-outline"
-        >
-          💰 Personal Tracker
-        </a>
-
-        <a
           href="reports.html"
           class="btn-outline"
         >
@@ -129,7 +139,21 @@
           href="group.html"
           class="btn-outline"
         >
-          👥 Manage Groups
+          👥 Groups
+        </a>
+
+        <a
+          href="history.html"
+          class="btn-outline"
+        >
+          📜 History
+        </a>
+
+        <a
+          href="dues.html"
+          class="btn-outline"
+        >
+          💳 Dues
         </a>
 
         <a
@@ -138,72 +162,26 @@
         >
           ⚙️ Settings
         </a>
-        <a href="history.html" class="btn-outline">
-          📜 History
-        </a>
-        <a href="dues.html" class="btn-outline">
-          💳 Dues
-        </a>
 
       </div>
 
 
-
       <!-- ========================= -->
-      <!-- ✅ BUDGET ALERT -->
+      <!-- LOGOUT -->
       <!-- ========================= -->
 
-      <div
-        class="alert"
-        id="budgetAlert"
-        style="display:none; margin-top:20px;"
+      <button
+        id="logoutBtn"
+        class="btn"
+        style="margin-top:25px;"
       >
-
-        <strong>Alert:</strong>
-
-        <span id="alertMessage"></span>
-
-      </div>
+        Logout
+      </button>
 
 
-
-      <!-- ========================= -->
-      <!-- ✅ RECENT ACTIVITY -->
-      <!-- ========================= -->
-
-      <h3 style="margin-top:25px;">
-        Recent Activity
-      </h3>
-
-      <div
-        id="recentActivity"
-        class="group-list note"
-      >
-
-        No recent activity.
-
-      </div>
-
-
-
-      <!-- ========================= -->
-      <!-- ✅ LOGOUT -->
-      <!-- ========================= -->
-
-      <div style="margin-top:20px;">
-
-        <button
-          id="logoutBtn"
-          class="btn"
-        >
-          Logout
-        </button>
-
-      </div>
-
-
+      <!-- Footer -->
       <p class="footer">
-        This is your personalized dashboard summary.
+        Track and manage your expenses easily.
       </p>
 
     </div>
@@ -212,7 +190,6 @@
 
 
   <!-- Scripts -->
-  <script src="auth.js"></script>
   <script src="dashboard.js"></script>
 
 </body>

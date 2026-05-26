@@ -1,384 +1,197 @@
 // ===============================
 // 🔐 SESSION CHECK
 // ===============================
+const s = localStorage.getItem('fs_session');
 
-const sessionData =
-  localStorage.getItem("fs_session");
-
-if (!sessionData) {
-
-  window.location = "login.html";
-
+if (!s) {
+  window.location = 'login.html';
 }
 
-const session =
-  JSON.parse(sessionData);
+const session = JSON.parse(s);
 
-document.getElementById("welcomeMsg")
-.textContent =
+
+// ===============================
+// 👋 WELCOME
+// ===============================
+document.getElementById('welcomeMsg').textContent =
   `Hello, ${session.name}! Here's your expense analytics.`;
 
 
-
 // ===============================
-// 📦 LOAD ALL BILLS
+// 🌐 LOAD EXPENSES FROM BACKEND
 // ===============================
+fetch(`http://localhost:8081/api/expenses/${session.email}`)
 
-const allBills =
-  JSON.parse(localStorage.getItem("fs_bills")) || [];
+.then(response => response.json())
 
+.then(expenses => {
 
+  loadReports(expenses);
 
-// ===============================
-// 👤 FILTER USER RELATED BILLS
-// ===============================
+})
 
-const userBills = allBills.filter(bill => {
+.catch(error => {
 
-  // Personal expense created by user
-  if (
-    bill.createdBy === session.email &&
-    !bill.isSplit
-  ) {
-    return true;
-  }
+  console.error(error);
 
-  // Group split member
-  if (
-    bill.selectedMembers &&
-    bill.selectedMembers.includes(session.email)
-  ) {
-    return true;
-  }
-
-  return false;
+  alert('Failed to load reports.');
 
 });
 
 
-
 // ===============================
-// 📊 SUMMARY VARIABLES
+// 📊 LOAD REPORTS
 // ===============================
+function loadReports(expenses) {
 
-let totalExpense = 0;
-
-let personalExpense = 0;
-
-let groupExpense = 0;
+  const tableBody =
+    document.querySelector('#expenseTable tbody');
 
 
+  // =========================
+  // EMPTY CASE
+  // =========================
+  if (expenses.length === 0) {
 
-// ===============================
-// 📂 CATEGORY DATA
-// ===============================
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="4">
+          No expenses found.
+        </td>
+      </tr>
+    `;
 
-const categoryTotals = {};
-
-
-
-// ===============================
-// 📈 TREND DATA
-// ===============================
-
-const trendData = {};
-
-
-
-// ===============================
-// 🧾 PROCESS BILLS
-// ===============================
-
-userBills.forEach(bill => {
-
-  let amount = Number(bill.amount);
-
-  let finalAmount = amount;
-
-  let expenseType = "Personal";
-
-
-  // Split calculation
-  if (
-    bill.isSplit &&
-    bill.selectedMembers &&
-    bill.selectedMembers.length > 0
-  ) {
-
-    finalAmount =
-      amount / bill.selectedMembers.length;
-
-    expenseType = "Group";
-
-    groupExpense += finalAmount;
-
-  }
-
-  else {
-
-    personalExpense += finalAmount;
-
+    return;
   }
 
 
-  // Total
-  totalExpense += finalAmount;
+  // =========================
+  // CATEGORY TOTALS
+  // =========================
+  const categoryTotals = {};
+
+  expenses.forEach(expense => {
+
+    if (!categoryTotals[expense.category]) {
+
+      categoryTotals[expense.category] = 0;
+    }
+
+    categoryTotals[expense.category] += expense.amount;
+
+  });
 
 
-  // Category
-  if (!categoryTotals[bill.category]) {
+  // =========================
+  // MONTHLY TREND
+  // =========================
+  const trendData = {};
 
-    categoryTotals[bill.category] = 0;
+  expenses.forEach(expense => {
 
-  }
+    const date =
+      expense.expenseDate;
 
-  categoryTotals[bill.category] += finalAmount;
+    if (!trendData[date]) {
 
+      trendData[date] = 0;
+    }
 
-  // Trend
-  if (!trendData[bill.date]) {
+    trendData[date] += expense.amount;
 
-    trendData[bill.date] = 0;
-
-  }
-
-  trendData[bill.date] += finalAmount;
-
-});
+  });
 
 
+  // =========================
+  // PIE CHART
+  // =========================
+  const categoryCtx =
+    document.getElementById('categoryChart');
 
-// ===============================
-// 💰 UPDATE SUMMARY CARDS
-// ===============================
+  new Chart(categoryCtx, {
 
-document.getElementById("totalExpenseValue")
-.textContent =
-  `₹ ${totalExpense.toFixed(2)}`;
+    type: 'pie',
 
-document.getElementById("personalExpenseValue")
-.textContent =
-  `₹ ${personalExpense.toFixed(2)}`;
+    data: {
 
-document.getElementById("groupExpenseValue")
-.textContent =
-  `₹ ${groupExpense.toFixed(2)}`;
+      labels: Object.keys(categoryTotals),
 
+      datasets: [{
 
+        data: Object.values(categoryTotals)
 
-// ===============================
-// 🥧 CATEGORY CHART
-// ===============================
+      }]
+    },
 
-const categoryCanvas =
-  document.getElementById("categoryChart");
+    options: {
+      responsive: true
+    }
 
-new Chart(categoryCanvas, {
-
-  type: "pie",
-
-  data: {
-
-    labels:
-      Object.keys(categoryTotals),
-
-    datasets: [
-
-      {
-
-        data:
-          Object.values(categoryTotals)
-
-      }
-
-    ]
-
-  },
-
-  options: {
-
-    responsive: true
-
-  }
-
-});
+  });
 
 
+  // =========================
+  // LINE CHART
+  // =========================
+  const trendCtx =
+    document.getElementById('trendChart');
 
-// ===============================
-// 📈 TREND CHART
-// ===============================
+  new Chart(trendCtx, {
 
-const trendCanvas =
-  document.getElementById("trendChart");
+    type: 'line',
 
-new Chart(trendCanvas, {
+    data: {
 
-  type: "line",
+      labels: Object.keys(trendData),
 
-  data: {
+      datasets: [{
 
-    labels:
-      Object.keys(trendData),
+        label: 'Amount Spent',
 
-    datasets: [
-
-      {
-
-        label: "Expense Amount",
-
-        data:
-          Object.values(trendData),
+        data: Object.values(trendData),
 
         fill: false,
 
         tension: 0.3
 
-      }
+      }]
+    },
 
-    ]
-
-  },
-
-  options: {
-
-    responsive: true
-
-  }
-
-});
-
-
-
-// ===============================
-// 📊 PERSONAL VS GROUP CHART
-// ===============================
-
-const comparisonCanvas =
-  document.getElementById("comparisonChart");
-
-new Chart(comparisonCanvas, {
-
-  type: "doughnut",
-
-  data: {
-
-    labels: [
-      "Personal",
-      "Group"
-    ],
-
-    datasets: [
-
-      {
-
-        data: [
-          personalExpense,
-          groupExpense
-        ]
-
-      }
-
-    ]
-
-  },
-
-  options: {
-
-    responsive: true
-
-  }
-
-});
-
-
-
-// ===============================
-// 🧾 EXPENSE TABLE
-// ===============================
-
-const tableBody =
-  document.querySelector(
-    "#expenseTable tbody"
-  );
-
-
-
-// No data
-if (userBills.length === 0) {
-
-  tableBody.innerHTML = `
-
-    <tr>
-
-      <td colspan="5">
-
-        No expenses found.
-
-      </td>
-
-    </tr>
-
-  `;
-
-}
-
-else {
-
-  const sortedBills =
-    [...userBills].reverse();
-
-
-  sortedBills.forEach(bill => {
-
-    let amount =
-      Number(bill.amount);
-
-    let displayAmount =
-      amount;
-
-    let type =
-      "Personal";
-
-
-    if (
-      bill.isSplit &&
-      bill.selectedMembers &&
-      bill.selectedMembers.length > 0
-    ) {
-
-      displayAmount =
-        amount / bill.selectedMembers.length;
-
-      type = "Group";
-
+    options: {
+      responsive: true
     }
 
+  });
+
+
+  // =========================
+  // TABLE DATA
+  // =========================
+  tableBody.innerHTML = '';
+
+  [...expenses]
+  .reverse()
+  .forEach(expense => {
 
     const row =
-      document.createElement("tr");
-
+      document.createElement('tr');
 
     row.innerHTML = `
 
       <td>
-        ${bill.date}
+        ${expense.expenseDate}
       </td>
 
       <td>
-        ${bill.category}
+        ${expense.category}
       </td>
 
       <td>
-        ${bill.title}
+        ${expense.title}
       </td>
 
       <td>
-        ${type}
-      </td>
-
-      <td>
-        ₹ ${displayAmount.toFixed(2)}
+        ₹${expense.amount}
       </td>
 
     `;
@@ -390,17 +203,14 @@ else {
 }
 
 
-
 // ===============================
 // 🚪 LOGOUT
 // ===============================
+document.getElementById('logoutBtn')
+.addEventListener('click', () => {
 
-document.getElementById("logoutBtn")
-.addEventListener("click", () => {
+  localStorage.removeItem('fs_session');
 
-  localStorage.removeItem("fs_session");
-
-  window.location =
-    "login.html";
+  window.location = 'login.html';
 
 });
