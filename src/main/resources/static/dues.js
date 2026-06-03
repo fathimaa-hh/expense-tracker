@@ -1,207 +1,200 @@
 // ===============================
 // 🔐 SESSION CHECK
 // ===============================
-const s =
-    localStorage.getItem('fs_session');
+const s = localStorage.getItem('fs_session');
 
 if (!s) {
-
-    window.location = 'login.html';
-
+  window.location = 'login.html';
 }
 
 const session = JSON.parse(s);
 
 
 // ===============================
-// 🌐 API URL
+// 📦 ELEMENTS
 // ===============================
-const API_URL =
-    'http://localhost:8081/api/settlements';
+const pendingList =
+  document.getElementById('pendingList');
 
-
-// ===============================
-// ➕ ADD DUE
-// ===============================
-document
-.getElementById('addDueBtn')
-
-.addEventListener('click', async () => {
-
-    const receiver =
-        document
-        .getElementById('receiver')
-        .value
-        .trim();
-
-    const amount =
-        parseFloat(
-            document
-            .getElementById('amount')
-            .value
-        );
-
-    if (!receiver || !amount) {
-
-        alert('Please fill all fields');
-
-        return;
-    }
-
-    const settlementData = {
-
-        payer: session.email,
-
-        receiver: receiver,
-
-        amount: amount,
-
-        status: 'Pending'
-
-    };
-
-    try {
-
-        const response =
-            await fetch(API_URL, {
-
-                method: 'POST',
-
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-
-                body: JSON.stringify(
-                    settlementData
-                )
-
-            });
-
-        if (!response.ok) {
-
-            throw new Error(
-                'Failed to save'
-            );
-
-        }
-
-        alert('Due added successfully!');
-
-        document.getElementById('receiver').value = '';
-
-        document.getElementById('amount').value = '';
-
-        loadSettlements();
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        alert('Error adding due');
-
-    }
-
-});
+const completedList =
+  document.getElementById('completedList');
 
 
 // ===============================
-// 📦 LOAD SETTLEMENTS
+// 🌐 LOAD SETTLEMENTS
 // ===============================
-async function loadSettlements() {
+function loadSettlements() {
 
-    try {
+  fetch(
+    `http://localhost:8081/api/settlements/user/${session.email}`
+  )
 
-        const response =
-            await fetch(
-                `${API_URL}/${session.email}`
-            );
+  .then(response => response.json())
 
-        const settlements =
-            await response.json();
+  .then(data => {
 
-        renderSettlements(
-            settlements
-        );
+    renderSettlements(data);
 
-    }
+  })
 
-    catch (error) {
+  .catch(error => {
 
-        console.error(error);
+    console.error(error);
 
-    }
+    pendingList.innerHTML =
+      'Failed to load settlements.';
+
+  });
 
 }
 
 
 // ===============================
-// 🎨 RENDER SETTLEMENTS
+// 🧾 RENDER SETTLEMENTS
 // ===============================
-function renderSettlements(
-    settlements
-) {
+function renderSettlements(settlements) {
 
-    const duesList =
-        document.getElementById(
-            'duesList'
-        );
+  const pending =
+    settlements.filter(
+      s => s.status.toLowerCase() === 'pending'
+    );
 
-    if (
-        !settlements ||
-        settlements.length === 0
-    ) {
+  const completed =
+    settlements.filter(
+      s => s.status.toLowerCase() === 'completed'
+    );
 
-        duesList.innerHTML = `
+  // ===============================
+  // PENDING
+  // ===============================
+  if (pending.length === 0) {
 
-            <p class="note">
-                No pending dues.
-            </p>
+    pendingList.innerHTML =
+      '<p class="note">No pending dues.</p>';
 
-        `;
+  } else {
 
-        return;
+    pendingList.innerHTML =
+      pending.map(item => `
+
+        <div class="subcard">
+
+          <strong>
+            ${item.expenseTitle}
+          </strong>
+
+          <br><br>
+
+          💰 ₹${item.amount}
+
+          <br><br>
+
+          👤 Pay To:
+          ${item.receiver}
+
+          <br><br>
+
+          👥 Group:
+          ${item.groupName}
+
+          <br><br>
+
+          <small>
+            Status:
+            ${item.status}
+          </small>
+
+          <br><br>
+
+          <button
+            class="btn"
+            onclick="settlePayment(${item.id})"
+          >
+            ✅ Settle
+          </button>
+
+        </div>
+
+      `).join('');
+  }
+
+
+  // ===============================
+  // COMPLETED
+  // ===============================
+  if (completed.length === 0) {
+
+    completedList.innerHTML =
+      '<p class="note">No completed settlements.</p>';
+
+  } else {
+
+    completedList.innerHTML =
+      completed.map(item => `
+
+        <div class="subcard">
+
+          <strong>
+            ${item.expenseTitle}
+          </strong>
+
+          <br><br>
+
+          💰 ₹${item.amount}
+
+          <br><br>
+
+          👤 Paid To:
+          ${item.receiver}
+
+          <br><br>
+
+          👥 Group:
+          ${item.groupName}
+
+          <br><br>
+
+          <small style="color:green;">
+            ✅ Completed
+          </small>
+
+        </div>
+
+      `).join('');
+  }
+
+}
+
+
+// ===============================
+// ✅ SETTLE PAYMENT
+// ===============================
+function settlePayment(id) {
+
+  fetch(
+    `http://localhost:8081/api/settlements/${id}`,
+    {
+      method: 'PUT'
     }
+  )
 
-    duesList.innerHTML = '';
+  .then(response => response.json())
 
-    settlements.forEach(
-        settlement => {
+  .then(data => {
 
-        duesList.innerHTML += `
+    alert('Settlement completed!');
 
-            <div class="subcard">
+    loadSettlements();
 
-                <h3>
-                    ₹ ${settlement.amount}
-                </h3>
+  })
 
-                <br>
+  .catch(error => {
 
-                <p>
-                    <strong>
-                        Receiver:
-                    </strong>
+    console.error(error);
 
-                    ${settlement.receiver}
-                </p>
+    alert('Failed to settle payment.');
 
-                <br>
-
-                <p>
-                    <strong>
-                        Status:
-                    </strong>
-
-                    ${settlement.status}
-                </p>
-
-            </div>
-
-        `;
-
-    });
+  });
 
 }
 

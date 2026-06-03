@@ -3,16 +3,11 @@
 
 <head>
 
-    <meta charset="utf-8">
+  <meta charset="utf-8">
 
-    <title>
-        Dues - Fare Share
-    </title>
+  <title>Dues - Fare Share</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+  <link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -20,96 +15,65 @@
 
 <div class="wrap">
 
-    <div class="card">
+<div class="card">
 
-        <!-- ===================== -->
-        <!-- HEADER -->
-        <!-- ===================== -->
+<h2>💳 Dues & Settlements</h2>
 
-        <h2>
-            💳 Dues & Settlements
-        </h2>
+<p class="note">
+Track pending and completed payments.
+</p>
 
-        <p class="note">
-            Manage pending balances and settlements.
-        </p>
+<!-- ========================= -->
+<!-- PENDING -->
+<!-- ========================= -->
 
+<h3 style="margin-top:25px;">
+Pending Dues
+</h3>
 
-        <!-- ===================== -->
-        <!-- ADD DUE FORM -->
-        <!-- ===================== -->
+<div
+  id="pendingList"
+  class="group-list"
+>
+  Loading...
+</div>
 
-        <div style="margin-top:25px;">
+<!-- ========================= -->
+<!-- COMPLETED -->
+<!-- ========================= -->
 
-            <label>
-                Receiver Email
-            </label>
+<h3 style="margin-top:25px;">
+Completed Settlements
+</h3>
 
-            <input
-                type="email"
-                id="receiver"
-                placeholder="Enter receiver email"
-            >
+<div
+  id="completedList"
+  class="group-list"
+>
+  Loading...
+</div>
 
-            <br><br>
+<!-- ========================= -->
+<!-- BACK -->
+<!-- ========================= -->
 
-            <label>
-                Amount
-            </label>
+<div style="margin-top:20px;">
 
-            <input
-                type="number"
-                id="amount"
-                placeholder="Enter amount"
-            >
+<a
+  href="dashboard.html"
+  class="btn-outline"
+>
+← Back to Dashboard
+</a>
 
-            <br><br>
+</div>
 
-            <button
-                id="addDueBtn"
-                class="btn"
-            >
-                Add Due
-            </button>
-
-        </div>
-
-
-        <!-- ===================== -->
-        <!-- DUES LIST -->
-        <!-- ===================== -->
-
-        <h3 style="margin-top:30px;">
-
-            Pending Settlements
-
-        </h3>
-
-        <div
-            id="duesList"
-            class="group-list"
-        >
-
-            No dues available.
-
-        </div>
-
-
-        <!-- ===================== -->
-        <!-- FOOTER -->
-        <!-- ===================== -->
-
-        <p class="footer">
-
-            Track shared payments and settlements.
-
-        </p>
-
-    </div>
+</div>
 
 </div>
 
 <script src="dues.js"></script>
 
 </body>
+
 </html>

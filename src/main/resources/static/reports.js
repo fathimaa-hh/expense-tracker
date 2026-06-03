@@ -11,22 +11,17 @@ const session = JSON.parse(s);
 
 
 // ===============================
-// 👋 WELCOME
+// 🌐 LOAD EXPENSES
 // ===============================
-document.getElementById('welcomeMsg').textContent =
-  `Hello, ${session.name}! Here's your expense analytics.`;
-
-
-// ===============================
-// 🌐 LOAD EXPENSES FROM BACKEND
-// ===============================
-fetch(`http://localhost:8081/api/expenses/${session.email}`)
+fetch(
+  `http://localhost:8081/api/expenses/${session.email}`
+)
 
 .then(response => response.json())
 
-.then(expenses => {
+.then(data => {
 
-  loadReports(expenses);
+  generateReports(data);
 
 })
 
@@ -34,44 +29,46 @@ fetch(`http://localhost:8081/api/expenses/${session.email}`)
 
   console.error(error);
 
-  alert('Failed to load reports.');
-
 });
 
 
 // ===============================
-// 📊 LOAD REPORTS
+// 📊 GENERATE REPORTS
 // ===============================
-function loadReports(expenses) {
+function generateReports(expenses) {
 
-  const tableBody =
-    document.querySelector('#expenseTable tbody');
+  let total = 0;
 
+  let personal = 0;
 
-  // =========================
-  // EMPTY CASE
-  // =========================
-  if (expenses.length === 0) {
+  let group = 0;
 
-    tableBody.innerHTML = `
-      <tr>
-        <td colspan="4">
-          No expenses found.
-        </td>
-      </tr>
-    `;
-
-    return;
-  }
-
-
-  // =========================
-  // CATEGORY TOTALS
-  // =========================
   const categoryTotals = {};
+
+  const monthlyTotals = {};
+
 
   expenses.forEach(expense => {
 
+    total += expense.amount;
+
+    // =========================
+    // PERSONAL/GROUP
+    // =========================
+    if (
+      expense.groupName === 'Personal'
+    ) {
+
+      personal += expense.amount;
+
+    } else {
+
+      group += expense.amount;
+    }
+
+    // =========================
+    // CATEGORY
+    // =========================
     if (!categoryTotals[expense.category]) {
 
       categoryTotals[expense.category] = 0;
@@ -79,138 +76,91 @@ function loadReports(expenses) {
 
     categoryTotals[expense.category] += expense.amount;
 
-  });
 
+    // =========================
+    // MONTH
+    // =========================
+    const month =
+      expense.expenseDate.substring(0, 7);
 
-  // =========================
-  // MONTHLY TREND
-  // =========================
-  const trendData = {};
+    if (!monthlyTotals[month]) {
 
-  expenses.forEach(expense => {
-
-    const date =
-      expense.expenseDate;
-
-    if (!trendData[date]) {
-
-      trendData[date] = 0;
+      monthlyTotals[month] = 0;
     }
 
-    trendData[date] += expense.amount;
+    monthlyTotals[month] += expense.amount;
 
   });
 
 
   // =========================
-  // PIE CHART
+  // SUMMARY
   // =========================
-  const categoryCtx =
-    document.getElementById('categoryChart');
+  document.getElementById(
+    'totalExpenses'
+  ).textContent =
+    `₹ ${total.toFixed(2)}`;
 
-  new Chart(categoryCtx, {
+  document.getElementById(
+    'personalExpenses'
+  ).textContent =
+    `₹ ${personal.toFixed(2)}`;
 
-    type: 'pie',
+  document.getElementById(
+    'groupExpenses'
+  ).textContent =
+    `₹ ${group.toFixed(2)}`;
 
-    data: {
 
-      labels: Object.keys(categoryTotals),
+  // =========================
+  // CATEGORY CHART
+  // =========================
+  new Chart(
 
-      datasets: [{
+    document.getElementById(
+      'categoryChart'
+    ),
 
-        data: Object.values(categoryTotals)
+    {
+      type: 'pie',
 
-      }]
-    },
+      data: {
 
-    options: {
-      responsive: true
+        labels:
+          Object.keys(categoryTotals),
+
+        datasets: [{
+          data:
+            Object.values(categoryTotals)
+        }]
+      }
     }
-
-  });
+  );
 
 
   // =========================
-  // LINE CHART
+  // MONTHLY CHART
   // =========================
-  const trendCtx =
-    document.getElementById('trendChart');
+  new Chart(
 
-  new Chart(trendCtx, {
+    document.getElementById(
+      'monthlyChart'
+    ),
 
-    type: 'line',
+    {
+      type: 'bar',
 
-    data: {
+      data: {
 
-      labels: Object.keys(trendData),
+        labels:
+          Object.keys(monthlyTotals),
 
-      datasets: [{
-
-        label: 'Amount Spent',
-
-        data: Object.values(trendData),
-
-        fill: false,
-
-        tension: 0.3
-
-      }]
-    },
-
-    options: {
-      responsive: true
+        datasets: [{
+          data:
+            Object.values(monthlyTotals)
+        }]
+      }
     }
-
-  });
-
-
-  // =========================
-  // TABLE DATA
-  // =========================
-  tableBody.innerHTML = '';
-
-  [...expenses]
-  .reverse()
-  .forEach(expense => {
-
-    const row =
-      document.createElement('tr');
-
-    row.innerHTML = `
-
-      <td>
-        ${expense.expenseDate}
-      </td>
-
-      <td>
-        ${expense.category}
-      </td>
-
-      <td>
-        ${expense.title}
-      </td>
-
-      <td>
-        ₹${expense.amount}
-      </td>
-
-    `;
-
-    tableBody.appendChild(row);
-
-  });
+  );
 
 }
-
-
-// ===============================
-// 🚪 LOGOUT
-// ===============================
-document.getElementById('logoutBtn')
-.addEventListener('click', () => {
-
-  localStorage.removeItem('fs_session');
-
-  window.location = 'login.html';
-
-});

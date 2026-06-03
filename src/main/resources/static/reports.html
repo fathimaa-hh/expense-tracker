@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
 
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
 
-  <title>
-    Reports & Analytics - Fare Share
-  </title>
+  <title>Reports - Fare Share</title>
 
   <link rel="stylesheet" href="style.css">
 
@@ -17,150 +15,95 @@
 
 <body>
 
-  <div class="wrap">
+<div class="wrap">
 
-    <div class="card">
+<div class="card">
 
-      <!-- Logo -->
-      <img
-        src="logojava.png"
-        alt="Fare Share"
-        class="logo"
-      />
+<h2>📊 Expense Reports</h2>
 
-      <!-- Heading -->
-      <h2>
-        Reports & Analytics
-      </h2>
+<p class="note">
+Visual insights of your spending.
+</p>
 
-      <!-- Welcome -->
-      <p
-        id="welcomeMsg"
-        class="note"
-      >
-        Loading reports...
-      </p>
+<!-- ========================= -->
+<!-- TOTAL SUMMARY -->
+<!-- ========================= -->
 
+<div class="card-grid">
 
-      <!-- ========================= -->
-      <!-- 📊 CHARTS -->
-      <!-- ========================= -->
+<div class="subcard">
 
-      <div class="card-grid">
+<h4>Total Expenses</h4>
 
-        <!-- Pie Chart -->
-        <div class="subcard">
+<p id="totalExpenses">
+₹ 0
+</p>
 
-          <h3>
-            Category Breakdown
-          </h3>
+</div>
 
-          <canvas id="categoryChart"></canvas>
+<div class="subcard">
 
-        </div>
+<h4>Personal Expenses</h4>
 
+<p id="personalExpenses">
+₹ 0
+</p>
 
-        <!-- Trend Chart -->
-        <div class="subcard">
+</div>
 
-          <h3>
-            Spending Trend
-          </h3>
+<div class="subcard">
 
-          <canvas id="trendChart"></canvas>
+<h4>Group Expenses</h4>
 
-        </div>
+<p id="groupExpenses">
+₹ 0
+</p>
 
-      </div>
+</div>
 
+</div>
 
-      <!-- ========================= -->
-      <!-- 📋 TABLE -->
-      <!-- ========================= -->
+<!-- ========================= -->
+<!-- CATEGORY CHART -->
+<!-- ========================= -->
 
-      <h3 style="margin-top:25px;">
-        Expense Details
-      </h3>
+<h3 style="margin-top:30px;">
+Category Spending
+</h3>
 
-      <table
-        class="data-table"
-        id="expenseTable"
-      >
+<canvas id="categoryChart"></canvas>
 
-        <thead>
+<!-- ========================= -->
+<!-- MONTHLY CHART -->
+<!-- ========================= -->
 
-          <tr>
+<h3 style="margin-top:30px;">
+Monthly Expenses
+</h3>
 
-            <th>Date</th>
+<canvas id="monthlyChart"></canvas>
 
-            <th>Category</th>
+<!-- ========================= -->
+<!-- BACK -->
+<!-- ========================= -->
 
-            <th>Title</th>
+<div style="margin-top:20px;">
 
-            <th>Amount</th>
+<a
+  href="dashboard.html"
+  class="btn-outline"
+>
+← Back to Dashboard
+</a>
 
-          </tr>
+</div>
 
-        </thead>
+</div>
 
-        <tbody>
+</div>
 
-        </tbody>
-
-      </table>
-
-
-      <!-- ========================= -->
-      <!-- 🔗 QUICK LINKS -->
-      <!-- ========================= -->
-
-      <div
-        class="quick-links"
-        style="margin-top:25px;"
-      >
-
-        <a href="dashboard.html" class="btn-outline">
-          🏠 Dashboard
-        </a>
-
-        <a href="addbill.html" class="btn-outline">
-          ➕ Add Bill
-        </a>
-
-        <a href="personal.html" class="btn-outline">
-          💰 Personal
-        </a>
-
-        <a href="group.html" class="btn-outline">
-          👥 Groups
-        </a>
-
-      </div>
-
-
-      <!-- ========================= -->
-      <!-- 🚪 LOGOUT -->
-      <!-- ========================= -->
-
-      <button
-        id="logoutBtn"
-        class="btn"
-        style="margin-top:20px;"
-      >
-        Logout
-      </button>
-
-      <p class="footer">
-
-        Expense analytics powered by Fare Share.
-
-      </p>
-
-    </div>
-
-  </div>
-
-  <script src="reports.js"></script>
+<script src="reports.js"></script>
 
 </body>
+
 </html>

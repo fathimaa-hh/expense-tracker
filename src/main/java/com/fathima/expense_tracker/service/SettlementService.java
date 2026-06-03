@@ -15,6 +15,10 @@ public class SettlementService {
     @Autowired
     private SettlementRepository settlementRepository;
 
+
+    // =========================
+    // SAVE
+    // =========================
     public Settlement saveSettlement(
             Settlement settlement
     ) {
@@ -22,10 +26,34 @@ public class SettlementService {
         return settlementRepository.save(settlement);
     }
 
+
+    // =========================
+    // GET USER SETTLEMENTS
+    // =========================
     public List<Settlement> getUserSettlements(
             String email
     ) {
 
         return settlementRepository.findByPayer(email);
     }
+
+
+    // =========================
+    // MARK AS COMPLETED
+    // =========================
+    public Settlement completeSettlement(
+            Long id
+    ) {
+
+        Settlement settlement =
+                settlementRepository
+                .findById(id)
+                .orElseThrow();
+
+        settlement.setStatus("Completed");
+
+        return settlementRepository
+                .save(settlement);
+    }
+
 }

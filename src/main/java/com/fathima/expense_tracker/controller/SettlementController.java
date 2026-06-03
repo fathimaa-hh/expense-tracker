@@ -17,6 +17,7 @@ public class SettlementController {
     @Autowired
     private SettlementService settlementService;
 
+
     // =========================
     // SAVE SETTLEMENT
     // =========================
@@ -26,18 +27,36 @@ public class SettlementController {
             @RequestBody Settlement settlement
     ) {
 
-        return settlementService.saveSettlement(settlement);
+        return settlementService
+                .saveSettlement(settlement);
     }
+
 
     // =========================
     // GET USER SETTLEMENTS
     // =========================
-    @GetMapping("/{email}")
+    @GetMapping("/user/{email}")
 
     public List<Settlement> getUserSettlements(
             @PathVariable String email
     ) {
 
-        return settlementService.getUserSettlements(email);
+        return settlementService
+                .getUserSettlements(email);
     }
+
+
+    // =========================
+    // COMPLETE PAYMENT
+    // =========================
+    @PutMapping("/{id}")
+
+    public Settlement completeSettlement(
+            @PathVariable Long id
+    ) {
+
+        return settlementService
+                .completeSettlement(id);
+    }
+
 }
