@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Register - Fare Share</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <img src="logojava.png" alt="Fare Share" class="logo" />
+      <h2>REGISTER</h2>
+      <form id="registerForm">
+        <input id="regName" class="form-input" placeholder="Full name" required>
+        <input id="regEmail" class="form-input" placeholder="Email address" type="email" required>
+        <input id="regPhone" class="form-input" placeholder="Phone (optional)" >
+        <input id="regPass" class="form-input" placeholder="Password (min 4 chars)" type="password" required>
+        <button class="btn" type="submit">REGISTER</button>
+        <div id="regMsg"></div>
+      </form>
+      <a class="small-link" href="login.html">Already have an account? Login</a>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>
+    Expense History - Fare Share
+  </title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <div class="card">
+
+      <!-- Logo -->
+      <img
+        src="logojava.png"
+        alt="Fare Share"
+        class="logo"
+      />
+
+      <!-- Heading -->
+      <h2>
+        Expense History
+      </h2>
+
+      <!-- Welcome -->
+      <p
+        id="welcomeMsg"
+        class="note"
+      >
+        Loading history...
+      </p>
+
+
+      <!-- ========================= -->
+      <!-- 📜 HISTORY LIST -->
+      <!-- ========================= -->
+
+      <div
+        id="historyList"
+        class="group-list"
+      >
+
+      </div>
+
+
+      <!-- ========================= -->
+      <!-- 🔗 QUICK LINKS -->
+      <!-- ========================= -->
+
+      <div
+        class="quick-links"
+        style="margin-top:25px;"
+      >
+
+        <a href="dashboard.html" class="btn-outline">
+          🏠 Dashboard
+        </a>
+
+        <a href="addbill.html" class="btn-outline">
+          ➕ Add Bill
+        </a>
+
+        <a href="reports.html" class="btn-outline">
+          📊 Reports
+        </a>
+
+        <a href="personal.html" class="btn-outline">
+          💰 Personal
+        </a>
+
+      </div>
+
+
+      <!-- ========================= -->
+      <!-- 🚪 LOGOUT -->
+      <!-- ========================= -->
+
+      <button
+        id="logoutBtn"
+        class="btn"
+        style="margin-top:20px;"
+      >
+        Logout
+      </button>
+
+      <p class="footer">
+
+        Track all your previous expenses.
+
+      </p>
+
+    </div>
+
+  </div>
+
+  <script src="history.js"></script>
+
+</body>
+</html>

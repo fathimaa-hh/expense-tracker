@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>My Expenses - Fare Share</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <div class="card">
+
+      <!-- Logo -->
+      <img
+        src="logojava.png"
+        alt="Fare Share"
+        class="logo"
+      />
+
+      <h2>My Expense Summary</h2>
+
+      <p id="userMsg" class="note">
+        Loading...
+      </p>
+
+      <!-- ========================= -->
+      <!-- SUMMARY -->
+      <!-- ========================= -->
+
+      <h3 style="margin-top:20px;">
+        Expense Overview
+      </h3>
+
+      <div class="card-grid">
+
+        <div class="subcard">
+          <h4>Total Expenses</h4>
+          <p id="spentValue">₹ 0</p>
+        </div>
+
+        <div class="subcard">
+          <h4>Personal Expenses</h4>
+          <p id="personalValue">₹ 0</p>
+        </div>
+
+        <div class="subcard">
+          <h4>Group Split Shares</h4>
+          <p id="groupValue">₹ 0</p>
+        </div>
+
+      </div>
+
+      <!-- ========================= -->
+      <!-- PENDING PAYMENTS -->
+      <!-- ========================= -->
+
+      <h3 style="margin-top:25px;">
+        Pending Settlements
+      </h3>
+
+      <div
+        id="pendingList"
+        class="group-list note"
+      >
+        No pending settlements.
+      </div>
+
+      <!-- ========================= -->
+      <!-- ALL EXPENSES -->
+      <!-- ========================= -->
+
+      <h3 style="margin-top:25px;">
+        Expense History
+      </h3>
+
+      <div
+        id="expList"
+        class="group-list note"
+      >
+        No expenses yet.
+      </div>
+            <!-- ========================= -->
+<!-- 💳 SETTLEMENTS -->
+<!-- ========================= -->
+
+      <h3 style="margin-top:25px;">
+        Pending Settlements
+      </h3>
+
+      <div
+        id="settlementList"
+        class="group-list note"
+      >
+        No pending settlements.
+      </div>
+
+      <!-- ========================= -->
+      <!-- NAVIGATION -->
+      <!-- ========================= -->
+
+      <div
+        class="quick-links"
+        style="margin-top:25px;"
+      >
+
+        <a href="dashboard.html"
+           class="btn-outline">
+          🏠 Dashboard
+        </a>
+
+        <a href="addbill.html"
+           class="btn-outline">
+          ➕ Add Bill
+        </a>
+
+        <a href="group.html"
+           class="btn-outline">
+          👥 Groups
+        </a>
+
+        <a href="reports.html"
+           class="btn-outline">
+          📊 Reports
+        </a>
+        <a href="history.html" class="btn-outline">
+          📜 History
+        </a>
+        <a href="dues.html" class="btn-outline">
+          💳 Dues
+        </a>
+
+      </div>
+
+      <p class="footer">
+        View your personal and shared expense activity.
+      </p>
+
+    </div>
+
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="personal.js"></script>
+
+</body>
+</html>

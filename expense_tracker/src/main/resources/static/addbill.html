@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Add Bill - Fare Share</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <div class="card">
+
+      <!-- Logo -->
+      <img
+        src="logojava.png"
+        alt="Fare Share"
+        class="logo"
+      />
+
+      <h2>Add New Bill</h2>
+
+      <p id="userMsg" class="note">
+        Loading...
+      </p>
+
+      <!-- ========================= -->
+      <!-- ✅ BILL FORM -->
+      <!-- ========================= -->
+
+      <div class="form-wrap">
+
+        <!-- Bill Title -->
+        <input
+          type="text"
+          id="billTitle"
+          class="input-field"
+          placeholder="Bill Title (Example: Dinner, Rent)"
+        >
+
+        <!-- Amount -->
+        <input
+          type="number"
+          id="billAmount"
+          class="input-field"
+          placeholder="Amount (₹)"
+        >
+
+        <!-- Date -->
+        <input
+          type="date"
+          id="billDate"
+          class="input-field"
+        >
+
+        <!-- Category -->
+        <input
+          type="text"
+          id="billCategory"
+          class="input-field"
+          placeholder="Category (Food, Travel, Rent...)"
+        >
+
+        <!-- ========================= -->
+        <!-- SPLIT OPTION -->
+        <!-- ========================= -->
+
+        <label class="note">
+          Do you want to split this expense?
+        </label>
+
+        <select
+          id="isSplit"
+          class="input-field"
+        >
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+
+        <!-- ========================= -->
+        <!-- GROUP SECTION -->
+        <!-- ========================= -->
+
+        <div id="groupSection" style="display:none;">
+
+          <label class="note">
+            Select Group
+          </label>
+
+          <select
+            id="groupSelect"
+            class="input-field"
+          >
+          </select>
+
+          <!-- Members -->
+          <div id="memberSelection">
+          </div>
+
+          <!-- Split Type -->
+          <label class="note">
+            Split Type
+          </label>
+
+          <select
+            id="splitType"
+            class="input-field"
+          >
+            <option value="equal">
+              Equal Split
+            </option>
+
+            <option value="custom">
+              Custom Split
+            </option>
+          </select>
+
+          <!-- Custom Split -->
+          <textarea
+            id="customSplitBox"
+            class="input-field"
+            rows="4"
+            placeholder="Enter custom split:
+friend@gmail.com:300"
+            style="display:none;"
+          ></textarea>
+
+        </div>
+
+        <!-- ========================= -->
+        <!-- PAYMENT SECTION -->
+        <!-- ========================= -->
+
+        <label class="note">
+          Payment Method
+        </label>
+
+        <select
+          id="paymentMethod"
+          class="input-field"
+        >
+          <option value="cash">Cash</option>
+          <option value="gpay">Google Pay</option>
+        </select>
+
+        <!-- Paid By -->
+        <label class="note">
+          Paid By
+        </label>
+
+        <input
+          type="email"
+          id="paidBy"
+          class="input-field"
+          readonly
+        >
+
+        <!-- Add Button -->
+        <button
+          id="addBillBtn"
+          class="btn"
+        >
+          Add Bill
+        </button>
+
+      </div>
+
+      <!-- ========================= -->
+      <!-- RECENT BILLS -->
+      <!-- ========================= -->
+
+      <h3 style="margin-top:25px;">
+        Recent Bills
+      </h3>
+
+      <div
+        id="billList"
+        class="group-list note"
+      >
+        No bills added yet.
+      </div>
+
+      <!-- ========================= -->
+      <!-- NAVIGATION -->
+      <!-- ========================= -->
+
+      <div
+        class="quick-links"
+        style="margin-top:25px;"
+      >
+
+        <a href="dashboard.html" class="btn-outline">
+          🏠 Dashboard
+        </a>
+
+        <a href="group.html" class="btn-outline">
+          👥 Groups
+        </a>
+
+        <a href="personal.html" class="btn-outline">
+          💰 Personal
+        </a>
+
+        <a href="reports.html" class="btn-outline">
+          📊 Reports
+        </a>
+
+      </div>
+
+      <p class="footer">
+        Add and split expenses easily with your friends.
+      </p>
+
+    </div>
+
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="addbill.js"></script>
+
+</body>
+</html>
