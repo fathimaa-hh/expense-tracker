@@ -411,36 +411,7 @@ document.getElementById('addBillBtn')
       // SETTLEMENT FOR PERSON
       // WHO PAID THE BILL
       // ===============================
-      if (member !== session.email) {
-
-        fetch('http://localhost:8081/api/settlements', {
-
-          method: 'POST',
-
-          headers: {
-            'Content-Type': 'application/json'
-          },
-
-          body: JSON.stringify({
-
-            payer: member,
-
-            receiver: session.email,
-
-            amount: splitDetails[member],
-
-            status: 'pending',
-
-            expenseTitle: title,
-
-            groupName: groupSelect.value
-
-          })
-
-        });
-
-
-      }
+     
 
     });
     alert('Group expense added successfully!');

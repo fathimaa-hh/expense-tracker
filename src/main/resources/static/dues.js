@@ -42,7 +42,7 @@ function loadSettlements() {
     console.error(error);
 
     pendingList.innerHTML =
-      'Failed to load settlements.';
+      '<p class="note">Failed to load settlements.</p>';
 
   });
 
@@ -56,23 +56,28 @@ function renderSettlements(settlements) {
 
   const pending =
     settlements.filter(
-      s => s.status.toLowerCase() === 'pending'
+      item =>
+        item.status.toLowerCase() === 'pending'
     );
 
   const completed =
     settlements.filter(
-      s => s.status.toLowerCase() === 'completed'
+      item =>
+        item.status.toLowerCase() === 'completed'
     );
 
+
   // ===============================
-  // PENDING
+  // PENDING LIST
   // ===============================
   if (pending.length === 0) {
 
     pendingList.innerHTML =
       '<p class="note">No pending dues.</p>';
 
-  } else {
+  }
+
+  else {
 
     pendingList.innerHTML =
       pending.map(item => `
@@ -85,12 +90,15 @@ function renderSettlements(settlements) {
 
           <br><br>
 
-          💰 ₹${item.amount}
+          💸 <b>${item.payer}</b>
+
+          owes
+
+          <b>${item.receiver}</b>
 
           <br><br>
 
-          👤 Pay To:
-          ${item.receiver}
+          💰 ₹${item.amount}
 
           <br><br>
 
@@ -99,18 +107,15 @@ function renderSettlements(settlements) {
 
           <br><br>
 
-          <small>
-            Status:
-            ${item.status}
-          </small>
-
-          <br><br>
-
           <button
             class="btn"
-            onclick="settlePayment(${item.id})"
+            onclick="openPaymentPopup(
+              ${item.id},
+              '${item.receiver}',
+              ${item.amount}
+            )"
           >
-            ✅ Settle
+            Pay Now
           </button>
 
         </div>
@@ -120,14 +125,16 @@ function renderSettlements(settlements) {
 
 
   // ===============================
-  // COMPLETED
+  // COMPLETED LIST
   // ===============================
   if (completed.length === 0) {
 
     completedList.innerHTML =
       '<p class="note">No completed settlements.</p>';
 
-  } else {
+  }
+
+  else {
 
     completedList.innerHTML =
       completed.map(item => `
@@ -167,12 +174,41 @@ function renderSettlements(settlements) {
 
 
 // ===============================
-// ✅ SETTLE PAYMENT
+// 💳 DEMO PAYMENT POPUP
 // ===============================
-function settlePayment(id) {
+function openPaymentPopup(
+  id,
+  receiver,
+  amount
+) {
+
+  const confirmPay = confirm(
+
+    `Demo Payment\n\n` +
+
+    `Pay ₹${amount} to ${receiver} ?`
+
+  );
+
+  if (confirmPay) {
+
+    alert(
+      '✅ Demo Payment Successful!'
+    );
+
+    markAsPaid(id);
+  }
+
+}
+
+
+// ===============================
+// ✅ MARK AS PAID
+// ===============================
+function markAsPaid(id) {
 
   fetch(
-    `http://localhost:8081/api/settlements/${id}`,
+    `http://localhost:8081/api/settlements/pay/${id}`,
     {
       method: 'PUT'
     }
@@ -182,7 +218,7 @@ function settlePayment(id) {
 
   .then(data => {
 
-    alert('Settlement completed!');
+    alert('Settlement completed.');
 
     loadSettlements();
 
@@ -192,7 +228,7 @@ function settlePayment(id) {
 
     console.error(error);
 
-    alert('Failed to settle payment.');
+    alert('Failed to update.');
 
   });
 

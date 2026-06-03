@@ -12,4 +12,6 @@ public interface SettlementRepository
     List<Settlement> findByPayer(String payer);
 
     List<Settlement> findByReceiver(String receiver);
+
+    List<Settlement> findByStatus(String status);
 }

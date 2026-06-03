@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.fathima.expense_tracker.model.Settlement;
-import com.fathima.expense_tracker.service.SettlementService;
+import com.fathima.expense_tracker.repository.SettlementRepository;
 
 @RestController
 @RequestMapping("/api/settlements")
@@ -15,7 +15,7 @@ import com.fathima.expense_tracker.service.SettlementService;
 public class SettlementController {
 
     @Autowired
-    private SettlementService settlementService;
+    private SettlementRepository settlementRepository;
 
 
     // =========================
@@ -27,8 +27,7 @@ public class SettlementController {
             @RequestBody Settlement settlement
     ) {
 
-        return settlementService
-                .saveSettlement(settlement);
+        return settlementRepository.save(settlement);
     }
 
 
@@ -41,22 +40,35 @@ public class SettlementController {
             @PathVariable String email
     ) {
 
-        return settlementService
-                .getUserSettlements(email);
+        List<Settlement> payerList =
+                settlementRepository.findByPayer(email);
+
+        List<Settlement> receiverList =
+                settlementRepository.findByReceiver(email);
+
+        payerList.addAll(receiverList);
+
+        return payerList;
     }
 
 
     // =========================
-    // COMPLETE PAYMENT
+    // MARK AS PAID
     // =========================
-    @PutMapping("/{id}")
+    @PutMapping("/pay/{id}")
 
-    public Settlement completeSettlement(
+    public Settlement markAsPaid(
             @PathVariable Long id
     ) {
 
-        return settlementService
-                .completeSettlement(id);
+        Settlement settlement =
+                settlementRepository
+                .findById(id)
+                .orElseThrow();
+
+        settlement.setStatus("completed");
+
+        return settlementRepository.save(settlement);
     }
 
 }

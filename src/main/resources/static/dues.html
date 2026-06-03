@@ -9,6 +9,11 @@
 
   <link rel="stylesheet" href="style.css">
 
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
 </head>
 
 <body>
@@ -17,56 +22,95 @@
 
 <div class="card">
 
-<h2>💳 Dues & Settlements</h2>
+  <!-- ========================= -->
+  <!-- HEADER -->
+  <!-- ========================= -->
 
-<p class="note">
-Track pending and completed payments.
-</p>
+  <h2>💳 Dues & Settlements</h2>
 
-<!-- ========================= -->
-<!-- PENDING -->
-<!-- ========================= -->
+  <p class="note">
+    Track pending and completed payments between friends.
+  </p>
 
-<h3 style="margin-top:25px;">
-Pending Dues
-</h3>
 
-<div
-  id="pendingList"
-  class="group-list"
->
-  Loading...
-</div>
+  <!-- ========================= -->
+  <!-- PENDING -->
+  <!-- ========================= -->
 
-<!-- ========================= -->
-<!-- COMPLETED -->
-<!-- ========================= -->
+  <h3 style="margin-top:30px;">
+    Pending Dues
+  </h3>
 
-<h3 style="margin-top:25px;">
-Completed Settlements
-</h3>
+  <div
+    id="pendingList"
+    class="group-list"
+  >
+    Loading...
+  </div>
 
-<div
-  id="completedList"
-  class="group-list"
->
-  Loading...
-</div>
 
-<!-- ========================= -->
-<!-- BACK -->
-<!-- ========================= -->
+  <!-- ========================= -->
+  <!-- COMPLETED -->
+  <!-- ========================= -->
 
-<div style="margin-top:20px;">
+  <h3 style="margin-top:30px;">
+    Completed Settlements
+  </h3>
 
-<a
-  href="dashboard.html"
-  class="btn-outline"
->
-← Back to Dashboard
-</a>
+  <div
+    id="completedList"
+    class="group-list"
+  >
+    Loading...
+  </div>
 
-</div>
+
+  <!-- ========================= -->
+  <!-- FOOTER NAVIGATION -->
+  <!-- ========================= -->
+
+  <div
+    class="quick-links"
+    style="margin-top:35px;"
+  >
+
+    <a href="dashboard.html" class="btn-outline">
+      🏠 Dashboard
+    </a>
+
+    <a href="addbill.html" class="btn-outline">
+      ➕ Add Bill
+    </a>
+
+    <a href="group.html" class="btn-outline">
+      👥 Groups
+    </a>
+
+    <a href="reports.html" class="btn-outline">
+      📊 Reports
+    </a>
+
+    <a href="history.html" class="btn-outline">
+      📜 History
+    </a>
+
+    <a href="personal.html" class="btn-outline">
+      💰 Personal
+    </a>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- FOOTER -->
+  <!-- ========================= -->
+
+  <p
+    class="footer"
+    style="margin-top:25px;"
+  >
+    Manage your shared payments and settlements easily.
+  </p>
 
 </div>
 

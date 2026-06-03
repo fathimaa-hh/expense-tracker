@@ -1,267 +1,586 @@
-/* style.css - Fare Share theme (authentication module) */
+/* =========================================
+   FARE SHARE - GLOBAL STYLE
+========================================= */
 
 :root{
+
   --primary:#a5b4bb;
   --primary-dark:#8c9da6;
+
   --bg:#f6f7f9;
   --card:#ffffff;
+
+  --text:#222;
   --muted:#777;
+
   --input-bg:#eeeeee;
+
+  --border:#dddddd;
+
+  --danger:#c0392b;
+  --danger-bg:#ffe5e5;
+
 }
 
-*{box-sizing:border-box}
-body{
+
+/* =========================================
+   RESET
+========================================= */
+
+*{
+  box-sizing:border-box;
   margin:0;
-  font-family: "Poppins", system-ui, Arial, sans-serif;
+  padding:0;
+}
+
+
+/* =========================================
+   BODY
+========================================= */
+
+body{
+
+  font-family:"Poppins", system-ui, Arial, sans-serif;
+
   background:var(--bg);
-  color:#222;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+
+  color:var(--text);
+
   min-height:100vh;
+
   padding:20px;
+
 }
 
-/* common container */
+
+/* =========================================
+   WRAPPER
+========================================= */
+
 .wrap{
+
   width:100%;
-  max-width:520px;
+
+  max-width:900px;
+
   margin:auto;
+
 }
 
-/* card */
+
+/* =========================================
+   CARD
+========================================= */
+
 .card{
+
   background:var(--card);
-  border-radius:28px;
-  padding:36px 32px;
+
+  border-radius:24px;
+
+  padding:32px;
+
   box-shadow:0 8px 24px rgba(20,20,20,0.06);
-  text-align:center;
+
 }
 
-/* logo area */
+
+/* =========================================
+   LOGO
+========================================= */
+
 .logo{
+
   display:block;
+
   margin:0 auto 18px;
+
   width:110px;
+
   height:110px;
+
   border-radius:30%;
-  background:linear-gradient(180deg,#fff,#f2f4f6);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:28px;
+
 }
 
-/* headings */
-h1{margin:6px 0 6px;font-size:28px}
-h2{margin:10px 0 14px;font-size:20px}
 
-/* tagline */
-.tagline{
+/* =========================================
+   HEADINGS
+========================================= */
+
+h1{
+
+  font-size:32px;
+
+  margin-bottom:10px;
+
+}
+
+h2{
+
+  font-size:26px;
+
+  margin-bottom:16px;
+
+}
+
+h3{
+
+  font-size:20px;
+
+  margin:20px 0 12px;
+
+}
+
+h4{
+
+  font-size:16px;
+
+  margin-bottom:8px;
+
+}
+
+
+/* =========================================
+   TEXT
+========================================= */
+
+.note{
+
   color:var(--muted);
-  font-size:12px;
-  letter-spacing:1px;
-  margin-bottom:18px;
-}
 
-/* input style */
-.form-input{
-  width:100%;
-  padding:14px 16px;
-  border-radius:12px;
-  border:none;
-  background:var(--input-bg);
-  margin:10px 0;
-  font-size:15px;
-  text-align:center;
-}
-
-.form-input:focus{outline:2px solid rgba(0,0,0,0.04)}
-
-/* buttons */
-.btn{
-  display:inline-block;
-  background:var(--primary);
-  color:#000;
-  padding:12px 22px;
-  border-radius:12px;
-  text-decoration:none;
-  font-weight:700;
-  letter-spacing:0.6px;
-  border:none;
-  cursor:pointer;
-  margin-top:12px;
-}
-
-.btn:hover{background:var(--primary-dark)}
-
-/* secondary small link */
-.small-link{
-  display:block;
-  margin-top:8px;
-  color:var(--muted);
-  font-size:13px;
-  text-decoration:none;
-}
-
-/* top CTA buttons in welcome */
-.cta-wrap{display:flex;flex-direction:column;gap:14px;margin-top:18px}
-.cta-wide{padding:14px 20px;border-radius:12px}
-
-/* forgot flow */
-.note{font-size:13px;color:var(--muted);margin-top:8px}
-
-/* success / error */
-.msg{
-  margin-top:10px;
-  padding:8px 12px;
-  border-radius:10px;
   font-size:14px;
-}
-.msg.success{background:#e6f7ea;color:#0a5b1f}
-.msg.error{background:#ffecec;color:#8b1a1a}
 
-/* tiny footer */
-.footer{font-size:12px;color:#999;margin-top:12px}
+  margin-top:5px;
 
-/* small screens */
-@media (max-width:420px){
-  .card{padding:22px}
-  .logo{width:96px;height:96px}
-}
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-  margin-top: 10px;
 }
 
-.subcard {
-  background: #f9fafc;
-  border: 1px solid #dcdcdc;
-  border-radius: 8px;
-  padding: 10px;
+.footer{
+
+  margin-top:25px;
+
+  text-align:center;
+
+  color:#999;
+
+  font-size:13px;
+
 }
 
-.quick-links a {
-  display: inline-block;
-  margin: 5px;
-  text-decoration: none;
-  color: #333;
-  border: 1px solid #ccc;
-  padding: 6px 10px;
-  border-radius: 6px;
+
+/* =========================================
+   INPUTS
+========================================= */
+
+.form-input,
+.input-field,
+textarea,
+select{
+
+  width:100%;
+
+  padding:12px 14px;
+
+  border-radius:10px;
+
+  border:1px solid var(--border);
+
+  background:var(--input-bg);
+
+  font-size:15px;
+
+  margin-top:8px;
+
 }
 
-.alert {
-  background: #ffeaea;
-  border: 1px solid #ff9999;
-  color: #c00;
-  padding: 8px;
-  border-radius: 6px;
-  margin-top: 15px;
-  display: none;
-}
-.form-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
+textarea{
+
+  resize:vertical;
+
 }
 
-.input-field {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 15px;
+.form-input:focus,
+.input-field:focus,
+textarea:focus,
+select:focus{
+
+  outline:none;
+
+  border:1px solid var(--primary-dark);
+
 }
 
-.group-list .subcard {
-  margin: 10px 0;
-  padding: 10px;
-  background: #fafafa;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+/* =========================================
+   FORM
+========================================= */
+
+.form-wrap{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:12px;
+
 }
 
-.btn-sm {
-  background-color: #e74c3c;
-  color: #fff;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-textarea.input-field {
-  resize: vertical;
+.form label{
+
+  margin-top:10px;
+
+  font-weight:600;
+
 }
 
-.subcard small {
-  display: block;
-  color: #555;
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.btn,
+.btn-outline{
+
+  display:inline-block;
+
+  padding:12px 20px;
+
+  border-radius:10px;
+
+  text-decoration:none;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:0.2s;
+
+  text-align:center;
+
 }
 
-select.input-field {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-  background-color: #fff;
-}
-.alert {
-  display: none;
-  background-color: #ffe5e5;
-  color: #c0392b;
-  padding: 10px;
-  border-radius: 8px;
-  margin-top: 15px;
-  font-size: 14px;
+.btn{
+
+  background:var(--primary);
+
+  color:#000;
+
+  border:none;
+
 }
 
-.subcard small {
-  display: block;
-  color: #666;
-}
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  font-size: 15px;
+.btn:hover{
+
+  background:var(--primary-dark);
+
 }
 
-.data-table th, .data-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
+.btn-outline{
+
+  border:1px solid #ccc;
+
+  background:#fff;
+
+  color:#333;
+
 }
 
-.data-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
-}
-.form label {
-  display: block;
-  margin-top: 10px;
-  font-weight: 600;
+.btn-outline:hover{
+
+  background:#f2f2f2;
+
 }
 
-.form input {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+.btn-sm{
+
+  background:#e74c3c;
+
+  color:#fff;
+
+  border:none;
+
+  padding:6px 10px;
+
+  border-radius:6px;
+
+  cursor:pointer;
+
 }
 
-.list {
-  margin-top: 10px;
-  list-style-type: none;
-  padding: 0;
+
+/* =========================================
+   QUICK LINKS
+========================================= */
+
+.quick-links{
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:10px;
+
+  justify-content:center;
+
+  margin-top:15px;
+
 }
 
-.list li {
-  background: #f7f7f7;
-  margin: 6px 0;
-  padding: 8px;
-  border-radius: 6px;
+
+/* =========================================
+   GRID
+========================================= */
+
+.card-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(220px, 1fr));
+
+  gap:15px;
+
+  margin-top:15px;
+
+}
+
+
+/* =========================================
+   SUB CARD
+========================================= */
+
+.subcard{
+
+  background:#f9fafc;
+
+  border:1px solid var(--border);
+
+  border-radius:12px;
+
+  padding:15px;
+
+}
+
+.subcard small{
+
+  display:block;
+
+  color:#666;
+
+  margin-top:4px;
+
+}
+
+
+/* =========================================
+   ALERT
+========================================= */
+
+.alert{
+
+  display:none;
+
+  background:var(--danger-bg);
+
+  color:var(--danger);
+
+  padding:12px;
+
+  border-radius:10px;
+
+  margin-top:15px;
+
+  font-size:14px;
+
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+.msg{
+
+  margin-top:10px;
+
+  padding:10px;
+
+  border-radius:8px;
+
+  font-size:14px;
+
+}
+
+.msg.success{
+
+  background:#e6f7ea;
+
+  color:#0a5b1f;
+
+}
+
+.msg.error{
+
+  background:#ffecec;
+
+  color:#8b1a1a;
+
+}
+
+
+/* =========================================
+   TABLES
+========================================= */
+
+.data-table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+  margin-top:15px;
+
+  font-size:15px;
+
+}
+
+.data-table th,
+.data-table td{
+
+  border:1px solid var(--border);
+
+  padding:10px;
+
+  text-align:center;
+
+}
+
+.data-table th{
+
+  background:#f4f4f4;
+
+}
+
+
+/* =========================================
+   LISTS
+========================================= */
+
+.list{
+
+  list-style:none;
+
+  margin-top:10px;
+
+}
+
+.list li{
+
+  background:#f7f7f7;
+
+  margin:6px 0;
+
+  padding:10px;
+
+  border-radius:8px;
+
+}
+
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.topbar{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-bottom:20px;
+
+  flex-wrap:wrap;
+
+  gap:10px;
+
+}
+
+.nav-links{
+
+  display:flex;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+
+}
+
+
+/* =========================================
+   MOBILE RESPONSIVE
+========================================= */
+
+@media (max-width:768px){
+
+  body{
+
+    padding:10px;
+
+  }
+
+  .card{
+
+    padding:20px;
+
+  }
+
+  .card-grid{
+
+    display:flex;
+
+    flex-direction:column;
+
+  }
+
+  .quick-links{
+
+    flex-direction:column;
+
+  }
+
+  .btn,
+  .btn-outline{
+
+    width:100%;
+
+  }
+
+  h1{
+
+    font-size:26px;
+
+  }
+
+  h2{
+
+    font-size:22px;
+
+  }
+
+  h3{
+
+    font-size:18px;
+
+  }
+
+  .topbar{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+
+  }
+
 }
