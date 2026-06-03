@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+
+    <title>
+        Dues - Fare Share
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <div class="card">
+
+        <!-- ===================== -->
+        <!-- HEADER -->
+        <!-- ===================== -->
+
+        <h2>
+            💳 Dues & Settlements
+        </h2>
+
+        <p class="note">
+            Manage pending balances and settlements.
+        </p>
+
+
+        <!-- ===================== -->
+        <!-- ADD DUE FORM -->
+        <!-- ===================== -->
+
+        <div style="margin-top:25px;">
+
+            <label>
+                Receiver Email
+            </label>
+
+            <input
+                type="email"
+                id="receiver"
+                placeholder="Enter receiver email"
+            >
+
+            <br><br>
+
+            <label>
+                Amount
+            </label>
+
+            <input
+                type="number"
+                id="amount"
+                placeholder="Enter amount"
+            >
+
+            <br><br>
+
+            <button
+                id="addDueBtn"
+                class="btn"
+            >
+                Add Due
+            </button>
+
+        </div>
+
+
+        <!-- ===================== -->
+        <!-- DUES LIST -->
+        <!-- ===================== -->
+
+        <h3 style="margin-top:30px;">
+
+            Pending Settlements
+
+        </h3>
+
+        <div
+            id="duesList"
+            class="group-list"
+        >
+
+            No dues available.
+
+        </div>
+
+
+        <!-- ===================== -->
+        <!-- FOOTER -->
+        <!-- ===================== -->
+
+        <p class="footer">
+
+            Track shared payments and settlements.
+
+        </p>
+
+    </div>
+
+</div>
+
+<script src="dues.js"></script>
+
+</body>
+</html>

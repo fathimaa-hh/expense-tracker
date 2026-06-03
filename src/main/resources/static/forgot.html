@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Forgot Password - Fare Share</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="logo">🔑</div>
+      <h2>Forgot Password</h2>
+
+      <!-- step 1: request code -->
+      <form id="forgotForm">
+        <input id="forgotEmail" class="form-input" placeholder="Enter your registered email" type="email" required>
+        <button class="btn" type="submit">Request Reset Code</button>
+        <div id="forgotMsg"></div>
+      </form>
+
+      <!-- step 2: reset area (hidden until code requested) -->
+      <div id="resetArea" style="display:none;margin-top:12px">
+        <p class="note">Enter the code (displayed here for demo) and choose new password.</p>
+        <form id="resetForm">
+          <input id="resetEmail" class="form-input" placeholder="Email" type="email" required>
+          <input id="resetCode" class="form-input" placeholder="Reset code" required>
+          <input id="resetPass" class="form-input" placeholder="New password" type="password" required>
+          <button class="btn" type="submit">Reset Password</button>
+          <div id="resetMsg"></div>
+        </form>
+      </div>
+
+      <a class="small-link" href="login.html">Back to Login</a>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>

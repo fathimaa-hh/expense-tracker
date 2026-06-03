@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard - Fare Share</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <div class="card">
+
+      <!-- Logo -->
+      <img
+        src="logojava.png"
+        alt="Fare Share"
+        class="logo"
+      />
+
+      <!-- Welcome -->
+      <h2>Dashboard</h2>
+
+      <p id="welcomeMsg" class="note">
+        Loading your dashboard...
+      </p>
+
+
+      <!-- ========================= -->
+      <!-- SUMMARY CARDS -->
+      <!-- ========================= -->
+
+      <div class="card-grid">
+
+        <!-- Total Expenses -->
+        <div class="subcard">
+
+          <h3>Total Expenses</h3>
+
+          <p
+            id="totalSpent"
+            style="
+              font-size:28px;
+              font-weight:bold;
+              margin-top:10px;
+            "
+          >
+            ₹0
+          </p>
+
+        </div>
+
+
+        <!-- Total Bills -->
+        <div class="subcard">
+
+          <h3>Total Bills</h3>
+
+          <p
+            id="totalBills"
+            style="
+              font-size:28px;
+              font-weight:bold;
+              margin-top:10px;
+            "
+          >
+            0
+          </p>
+
+        </div>
+
+
+        <!-- Latest Category -->
+        <div class="subcard">
+
+          <h3>Latest Category</h3>
+
+          <p
+            id="latestCategory"
+            style="
+              font-size:22px;
+              font-weight:bold;
+              margin-top:10px;
+            "
+          >
+            None
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- ========================= -->
+      <!-- RECENT EXPENSES -->
+      <!-- ========================= -->
+
+      <h3 style="margin-top:30px;">
+        Recent Expenses
+      </h3>
+
+      <div
+        id="recentExpenses"
+        class="group-list"
+      >
+
+        No expenses found.
+
+      </div>
+
+
+      <!-- ========================= -->
+      <!-- QUICK LINKS -->
+      <!-- ========================= -->
+
+      <h3 style="margin-top:30px;">
+        Quick Links
+      </h3>
+
+      <div class="quick-links">
+
+        <a
+          href="addbill.html"
+          class="btn-outline"
+        >
+          ➕ Add Bill
+        </a>
+
+        <a
+          href="reports.html"
+          class="btn-outline"
+        >
+          📊 Reports
+        </a>
+
+        <a
+          href="group.html"
+          class="btn-outline"
+        >
+          👥 Groups
+        </a>
+
+        <a
+          href="history.html"
+          class="btn-outline"
+        >
+          📜 History
+        </a>
+
+        <a
+          href="dues.html"
+          class="btn-outline"
+        >
+          💳 Dues
+        </a>
+
+        <a
+          href="settings.html"
+          class="btn-outline"
+        >
+          ⚙️ Settings
+        </a>
+
+      </div>
+
+
+      <!-- ========================= -->
+      <!-- LOGOUT -->
+      <!-- ========================= -->
+
+      <button
+        id="logoutBtn"
+        class="btn"
+        style="margin-top:25px;"
+      >
+        Logout
+      </button>
+
+
+      <!-- Footer -->
+      <p class="footer">
+        Track and manage your expenses easily.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- Scripts -->
+  <script src="dashboard.js"></script>
+
+</body>
+</html>
