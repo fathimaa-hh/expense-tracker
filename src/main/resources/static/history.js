@@ -4,7 +4,9 @@
 const s = localStorage.getItem('fs_session');
 
 if (!s) {
+
   window.location = 'login.html';
+
 }
 
 const session = JSON.parse(s);
@@ -13,30 +15,47 @@ const session = JSON.parse(s);
 // ===============================
 // 👋 WELCOME
 // ===============================
-document.getElementById('welcomeMsg').textContent =
-  `Hello, ${session.name}! Here is your expense history.`;
+document.getElementById(
+  'welcomeMsg'
+).textContent =
+
+  `Hello, ${session.name}! Here is your complete expense history.`;
 
 
 // ===============================
 // 🌐 LOAD HISTORY
 // ===============================
-fetch(`http://localhost:8081/api/expenses/${session.email}`)
+function loadHistory() {
 
-.then(response => response.json())
+  fetch(
+    `http://localhost:8081/api/expenses/${session.email}`
+  )
 
-.then(expenses => {
+  .then(response => response.json())
 
-  renderHistory(expenses);
+  .then(expenses => {
 
-})
+    renderHistory(expenses);
 
-.catch(error => {
+  })
 
-  console.error(error);
+  .catch(error => {
 
-  alert('Failed to load history.');
+    console.error(error);
 
-});
+    document.getElementById(
+      'historyList'
+    ).innerHTML = `
+
+      <p class="note">
+        Failed to load history.
+      </p>
+
+    `;
+
+  });
+
+}
 
 
 // ===============================
@@ -50,64 +69,123 @@ function renderHistory(expenses) {
   if (expenses.length === 0) {
 
     historyBox.innerHTML = `
+
       <p class="note">
         No expense history found.
       </p>
+
     `;
 
     return;
   }
 
+
+  // ===============================
+  // SORT NEWEST FIRST
+  // ===============================
+  expenses.sort((a, b) => {
+
+    return new Date(b.expenseDate)
+      -
+      new Date(a.expenseDate);
+
+  });
+
+
+  // ===============================
+  // RENDER
+  // ===============================
   historyBox.innerHTML =
-    [...expenses]
-    .reverse()
-    .map(expense => `
 
-      <div class="subcard">
+    expenses.map(expense => `
 
-        <h3>
-          ${expense.title}
-        </h3>
+      <div class="subcard history-card">
 
-        <p>
-          💰 Amount:
+        <div class="history-top">
+
+          <h3>
+            ${expense.title}
+          </h3>
+
+          <span class="history-badge">
+
+            ${
+              expense.groupName &&
+              expense.groupName !== 'Personal'
+
+              ? '👥 Group'
+
+              : '💰 Personal'
+            }
+
+          </span>
+
+        </div>
+
+
+        <div class="history-amount">
+
           ₹${expense.amount}
-        </p>
 
-        <p>
+        </div>
+
+
+        <small>
           📂 Category:
           ${expense.category}
-        </p>
+        </small>
 
-        <p>
+        <small>
           📅 Date:
           ${expense.expenseDate}
-        </p>
+        </small>
 
-        <p>
+        <small>
+          👤 Paid By:
+          ${expense.createdBy}
+        </small>
+
+        <small>
           👥 Group:
           ${expense.groupName || 'Personal'}
-        </p>
+        </small>
 
-        <p>
+        <small>
           🔀 Split:
-          ${expense.splitType}
-        </p>
+          ${expense.splitType || 'No Split'}
+        </small>
+
+        <small>
+          👨‍👩‍👧 Members:
+          ${expense.selectedMembers || 'Only You'}
+        </small>
 
       </div>
 
     `).join('');
+
 }
 
 
 // ===============================
 // 🚪 LOGOUT
 // ===============================
-document.getElementById('logoutBtn')
+document.getElementById(
+  'logoutBtn'
+)
+
 .addEventListener('click', () => {
 
-  localStorage.removeItem('fs_session');
+  localStorage.removeItem(
+    'fs_session'
+  );
 
   window.location = 'login.html';
 
 });
+
+
+// ===============================
+// 🚀 INITIAL LOAD
+// ===============================
+loadHistory();

@@ -8,8 +8,13 @@
   <title>Reports - Fare Share</title>
 
   <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
@@ -23,81 +28,174 @@
 <h2>📊 Expense Reports</h2>
 
 <p class="note">
-Visual insights of your spending.
+Analyze your spending and financial activity.
 </p>
 
+
 <!-- ========================= -->
-<!-- TOTAL SUMMARY -->
+<!-- SUMMARY CARDS -->
 <!-- ========================= -->
 
 <div class="card-grid">
 
-<div class="subcard">
+  <div class="subcard">
 
-<h4>Total Expenses</h4>
+    <h3>💰 Total Spent</h3>
 
-<p id="totalExpenses">
-₹ 0
-</p>
+    <p id="totalSpent">
+      ₹0
+    </p>
 
-</div>
+  </div>
 
-<div class="subcard">
+  <div class="subcard">
 
-<h4>Personal Expenses</h4>
+    <h3>⏳ Pending Dues</h3>
 
-<p id="personalExpenses">
-₹ 0
-</p>
+    <p id="pendingDues">
+      ₹0
+    </p>
 
-</div>
-
-<div class="subcard">
-
-<h4>Group Expenses</h4>
-
-<p id="groupExpenses">
-₹ 0
-</p>
+  </div>
 
 </div>
 
-</div>
 
 <!-- ========================= -->
-<!-- CATEGORY CHART -->
+<!-- CATEGORY CARDS -->
 <!-- ========================= -->
+
+<div
+  class="card-grid"
+  style="margin-top:20px;"
+>
+
+  <div class="subcard">
+
+    <h3>🍔 Food</h3>
+
+    <p id="foodAmount">
+      ₹0
+    </p>
+
+  </div>
+
+  <div class="subcard">
+
+    <h3>🏠 Rent</h3>
+
+    <p id="rentAmount">
+      ₹0
+    </p>
+
+  </div>
+
+  <div class="subcard">
+
+    <h3>✈️ Travel</h3>
+
+    <p id="travelAmount">
+      ₹0
+    </p>
+
+  </div>
+
+  <div class="subcard">
+
+    <h3>🛍 Shopping</h3>
+
+    <p id="shoppingAmount">
+      ₹0
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- CHART -->
+<!-- ========================= -->
+
+<div
+  class="subcard"
+  style="margin-top:25px;"
+>
+
+  <h3>
+    📈 Expense Breakdown
+  </h3>
+
+  <div class="chart-box">
+
+    <canvas id="expenseChart"></canvas>
+
+  </div>
+
+</div>
 
 <h3 style="margin-top:30px;">
-Category Spending
+📈 Monthly Expense Report
 </h3>
 
-<canvas id="categoryChart"></canvas>
+<div class="chart-box">
+
+  <canvas id="monthlyChart"></canvas>
+
+</div>
 
 <!-- ========================= -->
-<!-- MONTHLY CHART -->
+<!-- FOOTER NAV -->
 <!-- ========================= -->
 
-<h3 style="margin-top:30px;">
-Monthly Expenses
-</h3>
-
-<canvas id="monthlyChart"></canvas>
-
-<!-- ========================= -->
-<!-- BACK -->
-<!-- ========================= -->
-
-<div style="margin-top:20px;">
+<div
+  class="quick-links"
+  style="margin-top:25px;"
+>
 
 <a
   href="dashboard.html"
   class="btn-outline"
 >
-← Back to Dashboard
+🏠 Dashboard
+</a>
+
+<a
+  href="addbill.html"
+  class="btn-outline"
+>
+➕ Add Bill
+</a>
+
+<a
+  href="group.html"
+  class="btn-outline"
+>
+👥 Groups
+</a>
+
+<a
+  href="dues.html"
+  class="btn-outline"
+>
+💳 Dues
+</a>
+
+<a
+  href="personal.html"
+  class="btn-outline"
+>
+💰 Personal
 </a>
 
 </div>
+
+<p
+  class="footer"
+  style="margin-top:20px;"
+>
+Live analytics generated from your financial activity.
+</p>
 
 </div>
 

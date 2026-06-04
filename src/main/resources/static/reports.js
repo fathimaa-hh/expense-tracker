@@ -4,24 +4,43 @@
 const s = localStorage.getItem('fs_session');
 
 if (!s) {
+
   window.location = 'login.html';
+
 }
 
 const session = JSON.parse(s);
 
 
 // ===============================
-// 🌐 LOAD EXPENSES
+// 🌐 LOAD ALL REPORT DATA
 // ===============================
-fetch(
-  `http://localhost:8081/api/expenses/${session.email}`
-)
+Promise.all([
 
-.then(response => response.json())
+  fetch(
+    `http://localhost:8081/api/expenses/${session.email}`
+  ).then(res => res.json()),
 
-.then(data => {
+  fetch(
+    `http://localhost:8081/api/settlements/user/${session.email}`
+  ).then(res => res.json())
 
-  generateReports(data);
+])
+
+.then(([expenses, settlements]) => {
+
+  console.log(expenses);
+
+  console.log(settlements);
+
+  updateSummaryCards(
+    expenses,
+    settlements
+  );
+
+  generateCategoryChart(expenses);
+
+  generateMonthlyChart(expenses);
 
 })
 
@@ -33,53 +52,179 @@ fetch(
 
 
 // ===============================
-// 📊 GENERATE REPORTS
+// 📊 SUMMARY CARDS
 // ===============================
-function generateReports(expenses) {
+function updateSummaryCards(
+  expenses,
+  settlements
+) {
 
-  let total = 0;
+  let totalSpent = 0;
 
-  let personal = 0;
+  let pendingDues = 0;
 
-  let group = 0;
+  let food = 0;
+
+  let rent = 0;
+
+  let travel = 0;
+
+  let shopping = 0;
+
+
+  // ===============================
+  // EXPENSE TOTALS
+  // ===============================
+  expenses.forEach(expense => {
+
+    totalSpent += expense.amount || 0;
+
+    const category =
+      (expense.category || '')
+      .toLowerCase();
+
+    if (category.includes('food')) {
+
+      food += expense.amount;
+
+    }
+
+    else if (category.includes('rent')) {
+
+      rent += expense.amount;
+
+    }
+
+    else if (category.includes('travel')) {
+
+      travel += expense.amount;
+
+    }
+
+    else if (category.includes('shopping')) {
+
+      shopping += expense.amount;
+
+    }
+
+  });
+
+
+  // ===============================
+  // PENDING DUES
+  // ===============================
+  settlements.forEach(settlement => {
+
+    if (
+      settlement.status &&
+      settlement.status.toLowerCase() === 'pending'
+    ) {
+
+      pendingDues += settlement.amount || 0;
+
+    }
+
+  });
+
+
+  // ===============================
+  // UPDATE UI
+  // ===============================
+  document.getElementById(
+    'totalSpent'
+  ).textContent =
+    `₹${totalSpent.toFixed(2)}`;
+
+  document.getElementById(
+    'pendingDues'
+  ).textContent =
+    `₹${pendingDues.toFixed(2)}`;
+
+  document.getElementById(
+    'foodAmount'
+  ).textContent =
+    `₹${food.toFixed(2)}`;
+
+  document.getElementById(
+    'rentAmount'
+  ).textContent =
+    `₹${rent.toFixed(2)}`;
+
+  document.getElementById(
+    'travelAmount'
+  ).textContent =
+    `₹${travel.toFixed(2)}`;
+
+  document.getElementById(
+    'shoppingAmount'
+  ).textContent =
+    `₹${shopping.toFixed(2)}`;
+
+}
+
+
+// ===============================
+// 🥧 CATEGORY PIE CHART
+// ===============================
+function generateCategoryChart(expenses) {
 
   const categoryTotals = {};
 
-  const monthlyTotals = {};
+  expenses.forEach(expense => {
 
+    const category =
+      expense.category || 'Other';
+
+    if (!categoryTotals[category]) {
+
+      categoryTotals[category] = 0;
+    }
+
+    categoryTotals[category] += expense.amount;
+  });
+
+  const ctx =
+    document
+    .getElementById('expenseChart');
+
+  new Chart(ctx, {
+
+    type: 'pie',
+
+    data: {
+
+      labels: Object.keys(categoryTotals),
+
+      datasets: [{
+
+        data: Object.values(categoryTotals)
+
+      }]
+    },
+
+    options: {
+
+      responsive: true,
+
+      maintainAspectRatio: false
+    }
+
+  });
+
+}
+
+
+// ===============================
+// 📈 MONTHLY BAR GRAPH
+// ===============================
+function generateMonthlyChart(expenses) {
+
+  const monthlyTotals = {};
 
   expenses.forEach(expense => {
 
-    total += expense.amount;
+    if (!expense.expenseDate) return;
 
-    // =========================
-    // PERSONAL/GROUP
-    // =========================
-    if (
-      expense.groupName === 'Personal'
-    ) {
-
-      personal += expense.amount;
-
-    } else {
-
-      group += expense.amount;
-    }
-
-    // =========================
-    // CATEGORY
-    // =========================
-    if (!categoryTotals[expense.category]) {
-
-      categoryTotals[expense.category] = 0;
-    }
-
-    categoryTotals[expense.category] += expense.amount;
-
-
-    // =========================
-    // MONTH
-    // =========================
     const month =
       expense.expenseDate.substring(0, 7);
 
@@ -89,78 +234,36 @@ function generateReports(expenses) {
     }
 
     monthlyTotals[month] += expense.amount;
-
   });
 
+  const ctx =
+    document
+    .getElementById('monthlyChart');
 
-  // =========================
-  // SUMMARY
-  // =========================
-  document.getElementById(
-    'totalExpenses'
-  ).textContent =
-    `₹ ${total.toFixed(2)}`;
+  new Chart(ctx, {
 
-  document.getElementById(
-    'personalExpenses'
-  ).textContent =
-    `₹ ${personal.toFixed(2)}`;
+    type: 'bar',
 
-  document.getElementById(
-    'groupExpenses'
-  ).textContent =
-    `₹ ${group.toFixed(2)}`;
+    data: {
 
+      labels: Object.keys(monthlyTotals),
 
-  // =========================
-  // CATEGORY CHART
-  // =========================
-  new Chart(
+      datasets: [{
 
-    document.getElementById(
-      'categoryChart'
-    ),
+        label: 'Monthly Expenses',
 
-    {
-      type: 'pie',
+        data: Object.values(monthlyTotals)
 
-      data: {
+      }]
+    },
 
-        labels:
-          Object.keys(categoryTotals),
+    options: {
 
-        datasets: [{
-          data:
-            Object.values(categoryTotals)
-        }]
-      }
+      responsive: true,
+
+      maintainAspectRatio: false
     }
-  );
 
-
-  // =========================
-  // MONTHLY CHART
-  // =========================
-  new Chart(
-
-    document.getElementById(
-      'monthlyChart'
-    ),
-
-    {
-      type: 'bar',
-
-      data: {
-
-        labels:
-          Object.keys(monthlyTotals),
-
-        datasets: [{
-          data:
-            Object.values(monthlyTotals)
-        }]
-      }
-    }
-  );
+  });
 
 }

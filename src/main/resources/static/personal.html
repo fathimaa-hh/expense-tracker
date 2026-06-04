@@ -1,149 +1,160 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+
   <meta charset="utf-8">
-  <title>My Expenses - Fare Share</title>
+
+  <title>Personal Finance - Fare Share</title>
+
   <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
 </head>
 
 <body>
 
-  <div class="wrap">
+<div class="wrap">
 
-    <div class="card">
+<div class="card">
 
-      <!-- Logo -->
-      <img
-        src="logojava.png"
-        alt="Fare Share"
-        class="logo"
-      />
+<h2>💰 Personal Finance</h2>
 
-      <h2>My Expense Summary</h2>
+<p class="note">
+Track your actual personal spending and settlements.
+</p>
 
-      <p id="userMsg" class="note">
-        Loading...
-      </p>
 
-      <!-- ========================= -->
-      <!-- SUMMARY -->
-      <!-- ========================= -->
-
-      <h3 style="margin-top:20px;">
-        Expense Overview
-      </h3>
-
-      <div class="card-grid">
-
-        <div class="subcard">
-          <h4>Total Expenses</h4>
-          <p id="spentValue">₹ 0</p>
-        </div>
-
-        <div class="subcard">
-          <h4>Personal Expenses</h4>
-          <p id="personalValue">₹ 0</p>
-        </div>
-
-        <div class="subcard">
-          <h4>Group Split Shares</h4>
-          <p id="groupValue">₹ 0</p>
-        </div>
-
-      </div>
-
-      <!-- ========================= -->
-      <!-- PENDING PAYMENTS -->
-      <!-- ========================= -->
-
-      <h3 style="margin-top:25px;">
-        Pending Settlements
-      </h3>
-
-      <div
-        id="pendingList"
-        class="group-list note"
-      >
-        No pending settlements.
-      </div>
-
-      <!-- ========================= -->
-      <!-- ALL EXPENSES -->
-      <!-- ========================= -->
-
-      <h3 style="margin-top:25px;">
-        Expense History
-      </h3>
-
-      <div
-        id="expList"
-        class="group-list note"
-      >
-        No expenses yet.
-      </div>
-            <!-- ========================= -->
-<!-- 💳 SETTLEMENTS -->
+<!-- ========================= -->
+<!-- SUMMARY CARDS -->
 <!-- ========================= -->
 
-      <h3 style="margin-top:25px;">
-        Pending Settlements
-      </h3>
+<div class="card-grid">
 
-      <div
-        id="settlementList"
-        class="group-list note"
-      >
-        No pending settlements.
-      </div>
+  <div class="subcard">
 
-      <!-- ========================= -->
-      <!-- NAVIGATION -->
-      <!-- ========================= -->
+    <h3>🧾 Personal Expense</h3>
 
-      <div
-        class="quick-links"
-        style="margin-top:25px;"
-      >
-
-        <a href="dashboard.html"
-           class="btn-outline">
-          🏠 Dashboard
-        </a>
-
-        <a href="addbill.html"
-           class="btn-outline">
-          ➕ Add Bill
-        </a>
-
-        <a href="group.html"
-           class="btn-outline">
-          👥 Groups
-        </a>
-
-        <a href="reports.html"
-           class="btn-outline">
-          📊 Reports
-        </a>
-        <a href="history.html" class="btn-outline">
-          📜 History
-        </a>
-        <a href="dues.html" class="btn-outline">
-          💳 Dues
-        </a>
-
-      </div>
-
-      <p class="footer">
-        View your personal and shared expense activity.
-      </p>
-
-    </div>
+    <p id="personalExpense">
+      ₹0
+    </p>
 
   </div>
 
-  <script src="auth.js"></script>
-  <script src="personal.js"></script>
+  <div class="subcard">
+
+    <h3>✅ Completed Shares</h3>
+
+    <p id="completedExpense">
+      ₹0
+    </p>
+
+  </div>
+
+  <div class="subcard">
+
+    <h3>⏳ Pending To Pay</h3>
+
+    <p id="pendingPay">
+      ₹0
+    </p>
+
+  </div>
+
+  <div class="subcard">
+
+    <h3>💸 Money To Receive</h3>
+
+    <p id="moneyReceive">
+      ₹0
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- NET EXPENSE -->
+<!-- ========================= -->
+
+<div
+  class="subcard"
+  style="margin-top:20px;"
+>
+
+  <h3>📊 Net Personal Expense</h3>
+
+  <h1 id="netExpense">
+    ₹0
+  </h1>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- FOOTER NAVIGATION -->
+<!-- ========================= -->
+
+<div
+  class="quick-links"
+  style="margin-top:25px;"
+>
+
+<a
+  href="dashboard.html"
+  class="btn-outline"
+>
+🏠 Dashboard
+</a>
+
+<a
+  href="addbill.html"
+  class="btn-outline"
+>
+➕ Add Bill
+</a>
+
+<a
+  href="group.html"
+  class="btn-outline"
+>
+👥 Groups
+</a>
+
+<a
+  href="dues.html"
+  class="btn-outline"
+>
+💳 Dues
+</a>
+
+<a
+  href="reports.html"
+  class="btn-outline"
+>
+📊 Reports
+</a>
+
+</div>
+
+<p
+  class="footer"
+  style="margin-top:20px;"
+>
+Your live personal finance summary.
+</p>
+
+</div>
+
+</div>
+
+<script src="personal.js"></script>
 
 </body>
+
 </html>

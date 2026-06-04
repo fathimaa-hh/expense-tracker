@@ -85,49 +85,73 @@ function updateDashboard(expenses) {
   // =========================
   // RECENT EXPENSES
   // =========================
-  const recentBox =
-    document.getElementById('recentExpenses');
-
-  if (expenses.length === 0) {
-
-    recentBox.innerHTML =
-      'No expenses found.';
-
-    return;
-  }
-
-  recentBox.innerHTML =
-    [...expenses]
-    .reverse()
-    .slice(0, 5)
-    .map(expense => `
-
-      <div class="subcard">
-
-        <strong>
-          ${expense.title}
-        </strong>
-
-        <br><br>
-
-        ₹${expense.amount}
-
-        <br><br>
-
-        <small>
-          📂 ${expense.category}
-        </small>
-
-        <br>
-
-        <small>
-          📅 ${expense.expenseDate}
-        </small>
-
-      </div>
-
-    `).join('');
+  
 }
+
+// ===============================
+// 📊 LOAD ANALYTICS
+// ===============================
+
+function loadAnalytics() {
+
+    fetch(
+        `http://localhost:8081/api/analytics/${session.email}`
+    )
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        document.getElementById(
+            'budgetAmount'
+        ).textContent =
+            `₹${data.budget}`;
+
+        document.getElementById(
+            'spentAmount'
+        ).textContent =
+            `₹${data.totalSpent}`;
+
+        document.getElementById(
+            'remainingAmount'
+        ).textContent =
+            `₹${data.remaining}`;
+
+        // =========================
+        // WARNING
+        // =========================
+
+        if (
+            data.warning &&
+            data.warning !== ""
+        ) {
+
+            const warningBox =
+                document.getElementById(
+                    'budgetWarning'
+                );
+
+            warningBox.style.display =
+                'block';
+
+            warningBox.innerHTML =
+                data.warning;
+
+            // popup warning
+            alert(data.warning);
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+    });
+
+}
+
+loadAnalytics();
 
 
 // ===============================

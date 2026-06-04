@@ -418,7 +418,7 @@ document.getElementById('addBillBtn')
 
     resetForm();
 
-    loadBillsFromBackend();
+    
 
   })
 
@@ -459,90 +459,11 @@ function addToPersonalExpenses(email, expense) {
 // ===============================
 // 🌐 LOAD USER BILLS FROM BACKEND
 // ===============================
-function loadBillsFromBackend() {
-
-  fetch(
-    `http://localhost:8081/api/expenses/${session.email}`
-  )
-
-  .then(response => response.json())
-
-  .then(data => {
-
-    userBills = data;
-
-    renderBills();
-
-  })
-
-  .catch(error => {
-
-    console.error(error);
-
-  });
-
-}
-
 
 // ===============================
 // 🧾 RENDER BILLS
 // ===============================
-function renderBills() {
 
-  const billList =
-    document.getElementById('billList');
-
-  if (userBills.length === 0) {
-
-    billList.innerHTML =
-      'No bills added yet.';
-
-    return;
-  }
-
-  billList.innerHTML =
-    [...userBills]
-    .reverse()
-    .map(bill => `
-
-      <div class="subcard">
-
-        <strong>
-          ${bill.title}
-        </strong>
-
-        <br><br>
-
-        ₹${bill.amount}
-
-        <br><br>
-
-        <small>
-          📅 ${bill.expenseDate}
-        </small>
-
-        <br>
-
-        <small>
-          📂 ${bill.category}
-        </small>
-
-        <br>
-
-        <small>
-          👥 ${bill.groupName || 'Personal'}
-        </small>
-
-        <br>
-
-        <small>
-          🔀 ${bill.splitType}
-        </small>
-
-      </div>
-
-    `).join('');
-}
 
 
 // ===============================
@@ -575,4 +496,3 @@ function resetForm() {
 // ===============================
 // 🚀 INITIAL LOAD
 // ===============================
-loadBillsFromBackend();

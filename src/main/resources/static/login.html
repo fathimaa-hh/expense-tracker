@@ -10,16 +10,32 @@
   <div class="wrap">
     <div class="card">
       <div class="icon">👤</div>
-      <h2>LOGIN</h2>
-      <form id="loginForm">
-        <input id="loginEmail" class="form-input" placeholder="Email" type="email" required>
-        <input id="loginPass" class="form-input" placeholder="Password" type="password" required>
-        <button class="btn" type="submit">LOGIN</button>
-        <div id="loginMsg"></div>
-      </form>
-      <a class="small-link" href="forgot.html">Forgot password?</a>
-      <a class="small-link" href="register.html">New user? Register here</a>
-    </div>
+      <h2 class="auth-title">
+        LOGIN
+      </h2>
+
+      <p class="auth-subtitle">
+        Access your Fare Share account
+      </p>
+      <div class="auth-form">
+        <form id="loginForm">
+          <input id="loginEmail" class="form-input" placeholder="Email" type="email" required>
+          <input id="loginPass" class="form-input" placeholder="Password" type="password" required>
+          <button class="btn" type="submit">LOGIN</button>
+          <div id="loginMsg"></div>
+        </form>
+      </div>
+      <div class="auth-links">
+
+        <a href="forgot.html">
+          Forgot password?
+        </a>
+
+        <a href="register.html">
+          New user? Register
+        </a>
+
+      </div>
   </div>
 
   <script src="auth.js"></script>

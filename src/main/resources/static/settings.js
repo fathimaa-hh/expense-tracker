@@ -14,105 +14,117 @@ document.getElementById("userMsg").textContent =
 
 
 // ===============================
-// LOAD SETTINGS
+// 🌐 LOAD SETTINGS
 // ===============================
-let allSettings =
-    JSON.parse(localStorage.getItem("fs_settings")) || {};
+function loadSettings() {
 
-let userSettings =
-    allSettings[session.email] || {
+    fetch(
+        `http://localhost:8081/api/settings/${session.email}`
+    )
 
-        monthlyBudget: 0,
+    .then(response => response.json())
 
-        alertLimit: 80,
+    .then(data => {
 
-        upiId: "",
+        document.getElementById("budgetInput").value =
+            data.monthlyBudget || 0;
 
-        upiName: session.name
-    };
+        document.getElementById("alertLimitInput").value =
+            data.alertLimit || 80;
 
+        document.getElementById("upiIdInput").value =
+            data.upiId || "";
 
-// ===============================
-// PREFILL
-// ===============================
-document.getElementById("budgetInput").value =
-    userSettings.monthlyBudget;
+        document.getElementById("upiNameInput").value =
+            data.upiName || "";
 
-document.getElementById("alertLimitInput").value =
-    userSettings.alertLimit;
+    })
 
-document.getElementById("upiIdInput").value =
-    userSettings.upiId;
+    .catch(error => {
 
-document.getElementById("upiNameInput").value =
-    userSettings.upiName;
+        console.error(error);
 
+        alert("Failed to load settings.");
 
-// ===============================
-// SAVE FUNCTION
-// ===============================
-function saveSettings() {
+    });
 
-    allSettings[session.email] =
-        userSettings;
-
-    localStorage.setItem(
-        "fs_settings",
-        JSON.stringify(allSettings)
-    );
 }
 
 
 // ===============================
-// SAVE BUDGET
+// 💾 SAVE SETTINGS
+// ===============================
+function saveSettings() {
+
+    const settings = {
+
+        email: session.email,
+
+        monthlyBudget:
+            Number(
+                document.getElementById("budgetInput").value
+            ),
+
+        alertLimit:
+            Number(
+                document.getElementById("alertLimitInput").value
+            ),
+
+        upiId:
+            document.getElementById("upiIdInput").value,
+
+        upiName:
+            document.getElementById("upiNameInput").value
+    };
+
+    fetch(
+        "http://localhost:8081/api/settings",
+        {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(settings)
+
+        }
+    )
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        alert("Settings saved successfully!");
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert("Failed to save settings.");
+
+    });
+
+}
+
+
+// ===============================
+// SAVE BUTTONS
 // ===============================
 document.getElementById("saveBudgetBtn")
-.addEventListener("click", () => {
+.addEventListener("click", saveSettings);
 
-    userSettings.monthlyBudget =
-        Number(
-            document.getElementById("budgetInput").value
-        );
-
-    saveSettings();
-
-    alert("Budget saved!");
-
-});
-
-
-// ===============================
-// SAVE ALERT LIMIT
-// ===============================
 document.getElementById("saveAlertBtn")
-.addEventListener("click", () => {
+.addEventListener("click", saveSettings);
 
-    userSettings.alertLimit =
-        Number(
-            document.getElementById("alertLimitInput").value
-        );
-
-    saveSettings();
-
-    alert("Alert limit saved!");
-
-});
-
-
-// ===============================
-// SAVE UPI
-// ===============================
 document.getElementById("saveUpiBtn")
-.addEventListener("click", () => {
+.addEventListener("click", saveSettings);
 
-    userSettings.upiId =
-        document.getElementById("upiIdInput").value;
 
-    userSettings.upiName =
-        document.getElementById("upiNameInput").value;
-
-    saveSettings();
-
-    alert("UPI settings saved!");
-
-});
+// ===============================
+// 🚀 INITIAL LOAD
+// ===============================
+loadSettings();
